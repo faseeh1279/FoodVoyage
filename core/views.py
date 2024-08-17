@@ -13,3 +13,9 @@ def services_page(request):
 def contact_us(request): 
     context = {"url_name":"Contact"}
     return render(request, "contact.html", context)
+
+
+def order_now(request): 
+    context = {"url_name":"OrderNow"}
+    return render(request, "ordernow.html", context)
+

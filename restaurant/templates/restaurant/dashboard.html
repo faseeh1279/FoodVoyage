@@ -1,0 +1,79 @@
+{% include 'restaurant/layouts/navbar.html' %}
+
+
+<section class="container">
+    <h1 align="right">
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+        </label>
+        <p class="font-weight-bold">Enable/Disable</p>
+    </h1>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow m-2 p-5" style="font-size:40px">
+                <a href="#" class="text-center">+</a>
+
+                <div style="font-size:20px" class="text-center">
+                    Add Product
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow m-2 p-5 text-center" style="font-size:40px">
+                67
+                <div style="font-size:20px">
+                    Orders Completed
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card shadow m-2 p-5 text-center" style="font-size:40px">
+                1500000 Rs.
+                <div style="font-size:20px">
+                    Wallet
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col ">
+                <div class="card m-2 p-5 shadow">
+                    <h2 class="text-muted">Placed Ordered</h2>
+                    <div class="scrollable-content">
+                        <div class="card p-2 alert alert-primary">
+                            <div class="row">
+                                <div class="col">
+                                    <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg"
+                                        alt="Error Loading Image" style="height:100px; width:100px">
+                                </div>
+                                <div class="col">
+                                    food item name
+                                </div>
+                                <div class="col text-start">
+                                    Rider Name Accepeted the Order. / Order Accedpted!
+                                </div>
+                            </div>
+                        </div>
+                        <ul id="notificationList"></ul>
+                        <!-- Add more card alerts as needed -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="card m-2 p-5 shadow" style="height:600px">
+                <h2>Restaurant Location</h2>
+                <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&amp;q=Eiffel+Tower+Paris+France" width="250" height="500" frameborder="0" style="border:0; width: 100%;" allowfullscreen=""></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+ 
+{% include 'footer.html' %}

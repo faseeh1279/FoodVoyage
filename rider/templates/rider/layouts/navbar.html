@@ -2,18 +2,11 @@
 <html>
 
 <head>
+   {% load static %}
    <!-- basic -->
    <meta charset="utf-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1">
-   <!-- mobile metas -->
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-   <!-- site metas -->
-   <title>{{url_name}}</title>
-   <meta name="keywords" content="">
-   <meta name="description" content="">
-   <meta name="author" content="">
    {% load static %}
    <!-- bootstrap css -->
    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
@@ -29,9 +22,46 @@
    <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
    <!-- Tweaks for older IEs-->
    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-   <link rel="stylesheet" href="{% static 'css/sidenav.css' %}">
-</head>
+   
 
+   
+</head>
+<style>
+   .sidenav {
+   height: 100%;
+   width: 0;
+   position: fixed;
+   top: 0;
+   right: 0;
+   background-color: #e42e0c;
+   z-index: 1;
+   overflow-x: hidden;
+   padding-top: 60px;
+   transition: 0.5s;
+}
+
+.sidenav a {
+   padding: 8px 8px 8px 32px;
+   text-decoration: none;
+   font-size: 20px;
+   color: white;
+   display: block;
+   transition: 0.3s;
+}
+
+.sidenav a:hover {
+   color: white;
+   font-weight: bold;
+}
+
+.closebtn {
+   position: absolute;
+   top: 0;
+   right: 25px;
+   font-size: 36px;
+   margin-left: 50px;
+}
+</style>
 
 <body>
    <script>
@@ -56,7 +86,7 @@
       function closeNavOnClickOutside(event) {
          var sideNav = document.getElementById("mySidenav");
          var openButton = document.getElementById("openButton");
-
+         
       }
    </script>
    <!-- side navigation menu -->
@@ -82,19 +112,13 @@
       <a href="#">Notifications</a>
       <a href="{% url 'logout_google' %}">Logout</a>
    </div>
-
-   <!-- Use any element to open the sidenav -->
-   <!-- <span onclick="openNav()">open</span> -->
-
-
    <div id="main">
-
       <!-- header section start -->
-      <div class="header_section">
+      <div class="header_section header_bg">
          <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-               <a class="navbar-brand" href="index.html" style="font-weight: bold; color:red; font-size: 30px;">Food
-                  Voyage</a>
+               <a class="navbar-brand" href="{% url 'home' %}"
+                  style="font-weight: bold; color:red; font-size: 30px;">Food Voyage</a>
                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                   aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
@@ -122,6 +146,10 @@
                      <li class="nav-item {% if url_name == 'Contact' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'contact' %}"><span class="padding5"><i
                                  class="fa fa-angle-right"></i></span>Contact Us</a>
+                     </li>
+                     <li class="nav-item {% if url_name == 'Partner' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'rider-home' %}"><span class="padding5"><i
+                                 class="fa fa-angle-right"></i></span>Partner</a>
                      </li>
                   </ul>
                   <form class="form-inline my-2 my-lg-0">
@@ -152,69 +180,5 @@
                </div>
             </nav>
          </div>
-         <!-- banner section start -->
-         <div class="banner_section layout_padding">
-            <div class="container">
-               <div class="row">
-                  <div class="col-md-4">
-                     <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                           <div class="carousel-item active">
-
-                              <div class="banner_img"><img src="{% static 'images/banner-img.png' %}"></div>
-                           </div>
-                           <div class="carousel-item">
-                              <div class="banner_img"><img src="{% static 'images/banner-img.png' %}"></div>
-                           </div>
-                           <div class="carousel-item">
-                              <div class="banner_img"><img src="{% static 'images/banner-img.png' %}"></div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-md-8">
-                     <h1 class="banner_taital">Food Delivery</h1>
-                     <p class="banner_text">Search for your favorite foods here.
-                     </p>
-                     <!-- select box section start -->
-                     <div class="container">
-                        <div class="select_box_section">
-                           <div class="select_box_main">
-                              <div class="row">
-                                 <div class="col-md-4 select-outline">
-                                    <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
-                                       <option value="" disabled selected>City</option>
-                                       <option value="1">Option 1</option>
-                                       <option value="2">Option 2</option>
-                                       <option value="3">Option 3</option>
-                                    </select>
-                                 </div>
-                                 <div class="col-md-4 select-outline">
-                                    <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
-                                       <option value="" disabled selected>Restaurant</option>
-                                       <option value="1">Gujranwala</option>
-                                       <option value="2">Satellite Town</option>
-                                       <option value="3">Daska</option>
-                                    </select>
-                                 </div>
-                                 <div class="col-md-4 select-outline">
-                                    <select class="mdb-select md-form md-outline colorful-select dropdown-primary">
-                                       <option value="" disabled selected>Food</option>
-                                       <option value="1">Option 1</option>
-                                       <option value="2">Option 2</option>
-                                       <option value="3">Option 3</option>
-                                    </select>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="search_btn"><a href="#">Search Now</a></div>
-                        </div>
-                     </div>
-                     <!-- select box section end -->
-                  </div>
-               </div>
-            </div>
-         </div>
-         <!-- banner section end -->
       </div>
       <!-- header section end -->

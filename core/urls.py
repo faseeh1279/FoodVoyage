@@ -24,7 +24,10 @@ urlpatterns = [
     path('about/', views.about_page, name='about'),
     path('contact/', views.contact_us, name='contact'), 
     path('services/', views.services_page, name='services'),
+    path('order-now/', views.order_now, name='order'), 
     # External Apps 
     path('home/', include('users.urls')), 
     path('', include('customer.urls')), 
+    path("restaurant/", include("restaurant.urls")), 
+    path("rider/", include("rider.urls")),
 ]

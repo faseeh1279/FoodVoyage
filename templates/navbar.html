@@ -7,15 +7,9 @@
    <meta charset="utf-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1">
-   <!-- mobile metas -->
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-   <!-- site metas -->
-   <title>Blog</title>
-   <meta name="keywords" content="">
-   <meta name="description" content="">
-   <meta name="author" content="">
+   {% load static %}
    <!-- bootstrap css -->
+   
    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
    <!-- style css -->
    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -29,50 +23,49 @@
    <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
    <!-- Tweaks for older IEs-->
    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+  
 </head>
-<style>
-   .sidenav {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      background-color: #ffffff;
-      z-index: 1;
-      overflow-x: hidden;
-      padding-top: 60px;
-      transition: 0.5s;
-   }
+<style>.sidenav {
+   height: 100%;
+   width: 0;
+   position: fixed;
+   top: 0;
+   right: 0;
+   background-color: #e42e0c;
+   z-index: 1;
+   overflow-x: hidden;
+   padding-top: 60px;
+   transition: 0.5s;
+}
 
-   .sidenav a {
-      padding: 8px 8px 8px 32px;
-      text-decoration: none;
-      font-size: 20px;
-      color: #000000;
-      display: block;
-      transition: 0.3s;
-   }
+.sidenav a {
+   padding: 8px 8px 8px 32px;
+   text-decoration: none;
+   font-size: 20px;
+   color: white;
+   display: block;
+   transition: 0.3s;
+}
 
-   .sidenav a:hover {
-      color: #ff0000;
-      font-weight: bold;
-   }
+.sidenav a:hover {
+   color: white;
+   font-weight: bold;
+}
 
-   .closebtn {
-      position: absolute;
-      top: 0;
-      right: 25px;
-      font-size: 36px;
-      margin-left: 50px;
-   }
-</style>
+.closebtn {
+   position: absolute;
+   top: 0;
+   right: 25px;
+   font-size: 36px;
+   margin-left: 50px;
+}</style>
 
 <body>
    <script>
       function openNav() {
          document.getElementById("mySidenav").style.width = "250px";
          document.getElementById("main").style.marginRight = "250px";
-         document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+         document.body.style.backgroundColor = "white";
 
          // Add event listener to close the side navigation on clicking outside
          document.addEventListener('click', closeNavOnClickOutside);
@@ -90,9 +83,7 @@
       function closeNavOnClickOutside(event) {
          var sideNav = document.getElementById("mySidenav");
          var openButton = document.getElementById("openButton");
-         if (!sideNav.contains(event.target) && !openButton.contains(event.target)) {
-            closeNav();
-         }
+         
       }
    </script>
    <!-- side navigation menu -->
@@ -135,46 +126,49 @@
                         <a class="nav-link" href="{% url 'home' %}"><span class="padding5"><i
                                  class="fa fa-angle-right"></i></span>Home</a>
                      </li>
-                     <li class="nav-item  {% if url_name == 'About' %} active {% endif %}">
-                        <a class="nav-link" href="about.html"><span class="padding5"><i
+                     <li class="nav-item {% if url_name == 'OrderNow' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'order' %}"><span class="padding5"><i
+                                 class="fa fa-angle-right"></i></span>Order Now</a>
+                     </li>
+                     <li class="nav-item {% if url_name == 'Services' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'services' %}"><span class="padding5"><i
+                                 class="fa fa-angle-right"></i></span>Services</a>
+
+                     </li>
+
+                     <li class="nav-item {% if url_name == 'About' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'about' %}"><span class="padding5"><i
                                  class="fa fa-angle-right"></i></span>About</a>
                      </li>
-                     <li class="nav-item  {% if url_name == 'Blog' %} active {% endif %}">
-                        <a class="nav-link" href="blog.html"><span class="padding5"><i
-                                 class="fa fa-angle-right"></i></span>Blog</a>
-                     </li>
-                     <li class="nav-item  {% if url_name == 'Services' %} active {% endif %}">
-                        <a class="nav-link" href="services.html"><span class="padding5"><i
-                                 class="fa fa-angle-right"></i></span>Services</a>
-                     </li>
-                     <li class="nav-item  {% if url_name == 'Contact' %} active {% endif %}">
-                        <a class="nav-link" href="contact.html"><span class="padding5"><i
+                     <li class="nav-item {% if url_name == 'Contact' %} active {% endif %}">
+                        <a class="nav-link" href="{% url 'contact' %}"><span class="padding5"><i
                                  class="fa fa-angle-right"></i></span>Contact Us</a>
                      </li>
                   </ul>
                   <form class="form-inline my-2 my-lg-0">
                      {% if user.is_authenticated %}
-                  {% with socialaccount=user.socialaccount_set.first %}
-                  {% if socialaccount %}
-                  {% if socialaccount.provider == 'google' %}
-                  {% if socialaccount.extra_data.picture %}
-                  <span onclick="openNav()">
-                  <img src="{{ socialaccount.extra_data.picture }}" alt="Profile Image" id="login-image"
-                     style="border-radius: 50%; height: 50px; width: 50px;">
-                  </span>
-                  {% endif %}
-                  {% endif %}
-                  {% endif %}
-                  {% endwith %}
-                  {% else %}
-                  <!-- Your alternative content for non-authenticated users -->
-                  <div class="login_bt">
-                     <ul>
-                        <li><a href="{% url 'login' %}">Login</a></li>
-                        <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></li>
-                     </ul>
-                  </div>
-                  {% endif %}
+                     {% with socialaccount=user.socialaccount_set.first %}
+                     {% if socialaccount %}
+                     {% if socialaccount.provider == 'google' %}
+                     {% if socialaccount.extra_data.picture %}
+                     <span onclick="openNav()">
+                        <img src="{{ socialaccount.extra_data.picture }}" alt="Profile Image" id="login-image"
+                           style="border-radius: 50%; height: 50px; width: 50px;">
+                     </span>
+                     {% endif %}
+                     {% endif %}
+                     {% endif %}
+                     {% endwith %}
+                     {% else %}
+                     <!-- Your alternative content for non-authenticated users -->
+                     <div class="login_bt">
+                        <ul>
+                           <li><a href="{% url 'login' %}">Login</a></li>
+                           <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i></a></li>
+                        </ul>
+                     </div>
+                     {% endif %}
+
                   </form>
                </div>
             </nav>

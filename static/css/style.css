@@ -215,7 +215,7 @@ button {
 .header_section {
     width: 100%;
     float: left;
-    background-image: url(../images/banner-bg.png);
+    background-image: url("/static/images/banner-bg.png");
     height: auto;
     background-size: cover;
     background-repeat: no-repeat;
@@ -489,7 +489,7 @@ span.current {
     position: absolute;
     width: 110px;
     height: 180px;
-    background-image: url(../images/img-5.png);
+    background-image: url("/static/images/img-5.png");
     background-size: 100%;
     background-repeat: no-repeat;
     left: -120px;
@@ -501,7 +501,7 @@ span.current {
     position: absolute;
     width: 110px;
     height: 180px;
-    background-image: url(../images/img-6.png);
+    background-image: url("/static/images/img-6.png");
     background-size: 100%;
     background-repeat: no-repeat;
     right: -120px;
@@ -515,7 +515,7 @@ span.current {
 .about_section {
     width: 100%;
     float: left;
-    background-image: url(../images/about-bg.png);
+    background-image: url("/static/images/about-bg.png");
     height: auto;
     background-size: 100%;
 }
@@ -1003,7 +1003,6 @@ textarea#comment.massage-bt::placeholder {
 .subscribe_bt {
     width: 170px;
     float: left;
-    padding-top: 20px;
 }
 
 .subscribe_bt a {

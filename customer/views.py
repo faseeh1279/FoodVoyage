@@ -1,4 +1,5 @@
 from django.shortcuts import render
 
 def index(request):
-    return render(request, 'customer/index.html')
+    context = {"url_name":"Home"}
+    return render(request, 'customer/index.html', context)
