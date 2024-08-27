@@ -28,7 +28,7 @@ urlpatterns = [
     path('contact/', views.contact_us, name='contact'), 
     path('services/', views.services_page, name='services'),
     path('order-now/', views.order_now, name='order'), 
-    path("add-to-card", views.add_to_cart, name="add-to-cart"),
+    path("add-to-card/", views.add_to_cart, name="add-to-cart"),
 
     # AJAX 
     path("get-data/", views.get_data),
@@ -38,6 +38,7 @@ urlpatterns = [
     path('', include('customer.urls')), 
     path("partner-with-us/restaurant/", include("restaurant.urls")), 
     path("partner-with-us/rider/", include("rider.urls")),
+    path("payments/", include("payments.urls")), 
 ]
 
 
