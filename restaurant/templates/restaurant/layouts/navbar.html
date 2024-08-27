@@ -22,45 +22,45 @@
    <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
    <!-- Tweaks for older IEs-->
    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-   
 
-   
+
+
 </head>
 <style>
    .sidenav {
-   height: 100%;
-   width: 0;
-   position: fixed;
-   top: 0;
-   right: 0;
-   background-color: #e42e0c;
-   z-index: 1;
-   overflow-x: hidden;
-   padding-top: 60px;
-   transition: 0.5s;
-}
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      background-color: #e42e0c;
+      z-index: 1;
+      overflow-x: hidden;
+      padding-top: 60px;
+      transition: 0.5s;
+   }
 
-.sidenav a {
-   padding: 8px 8px 8px 32px;
-   text-decoration: none;
-   font-size: 20px;
-   color: white;
-   display: block;
-   transition: 0.3s;
-}
+   .sidenav a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 20px;
+      color: white;
+      display: block;
+      transition: 0.3s;
+   }
 
-.sidenav a:hover {
-   color: white;
-   font-weight: bold;
-}
+   .sidenav a:hover {
+      color: white;
+      font-weight: bold;
+   }
 
-.closebtn {
-   position: absolute;
-   top: 0;
-   right: 25px;
-   font-size: 36px;
-   margin-left: 50px;
-}
+   .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+   }
 </style>
 
 <body>
@@ -86,7 +86,7 @@
       function closeNavOnClickOutside(event) {
          var sideNav = document.getElementById("mySidenav");
          var openButton = document.getElementById("openButton");
-         
+
       }
    </script>
    <!-- side navigation menu -->
@@ -136,9 +136,7 @@
                      <li class="nav-item {% if url_name == 'Services' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'services' %}"><span class="padding5"><i
                                  class="fa fa-angle-right"></i></span>Services</a>
-
                      </li>
-
                      <li class="nav-item {% if url_name == 'About' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'about' %}"><span class="padding5"><i
                                  class="fa fa-angle-right"></i></span>About</a>
@@ -150,6 +148,12 @@
                      <li class="nav-item {% if url_name == 'Partner' %} active {% endif %}">
                         <a class="nav-link" href="{% url 'restaurant-home' %}"><span class="padding5"><i
                                  class="fa fa-angle-right"></i></span>Partner</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#" style="font-size: 20px; color:#e42e0c">
+                           <i class="fa fa-shopping-cart"></i> Cart
+                           <!-- This badge can be dynamically updated to show the number of items in the cart -->
+                        </a>
                      </li>
                   </ul>
                   <form class="form-inline my-2 my-lg-0">
@@ -167,7 +171,6 @@
                      {% endif %}
                      {% endwith %}
                      {% else %}
-                     <!-- Your alternative content for non-authenticated users -->
                      <div class="login_bt">
                         <ul>
                            <li><a href="{% url 'login' %}">Login</a></li>
@@ -175,7 +178,6 @@
                         </ul>
                      </div>
                      {% endif %}
-
                   </form>
                </div>
             </nav>

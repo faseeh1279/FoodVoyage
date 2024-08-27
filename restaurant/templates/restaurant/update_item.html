@@ -1,0 +1,39 @@
+{% include 'restaurant/layouts/navbar.html' %}
+
+
+<form action="" method="POST" class="mx-auto card shadow container m-5 p-5 col-6 mx-auto" id="partner-form"
+  enctype="multipart/form-data">
+  {% csrf_token %}
+  <h2 class="form-group container font-weight-bold text-center">Item # {{id}}</h2>
+  <div class="form-group container">
+    <label for="FoodItemName">Name</label>
+    <input type="text" name="item_name" class="form-control" placeholder="Enter Food Item Name" id="item-name" required>
+    <span class="error" id="error-item-name"></span>
+  </div>
+  <div class="form-group container">
+    <label for="FoodDescription">Food Description</label>
+    <input type="text" name="item_description" id="item-description" class="form-control"
+      placeholder="Enter Food Item Description" required>
+    <span class="error" id="error-item-description"></span>
+  </div>
+  <div class="form-group container">
+    <label for="FoodPrice">Food Price</label>
+    <input name="item_price" class="form-control" id="item-price" placeholder="Enter Food Price" required>
+    <span class="error" id="error-item-price"></span>
+  </div>
+  <div class="form-group container">
+    <label for="FoodImage">Upload Image</label>
+    <input type="file" name="item_image" id="item-image" class="form-control" required>
+  </div>
+  <div class="form-group container">
+    <input type="checkbox" required>
+    <label for="TermsAndConditions" class="form-check-label">Terms & Conditions</label>
+  </div>
+  <div class="form-group">
+    <input type="submit" class="btn btn-primary" value="Update" id="btnSubmit">
+    <input type="reset" class="btn btn-secondary" value="Reset">
+    <a href="{% url 'restaurant-add-food' %}" class="btn btn-warning">Go Back</a>
+  </div>
+</form>
+
+{% include 'footer.html' %}

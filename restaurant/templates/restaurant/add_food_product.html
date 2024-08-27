@@ -1,72 +1,74 @@
-{% extends 'layouts/base.html' %}
+{% include 'restaurant/layouts/navbar.html' %}
 
-{% block links %}
-    
-{% endblock links %}
-
-{% block content %}
-    
-<form action="" method="POST" class="mx-auto card shadow container m-5 p-5" id="partner-form" enctype="multipart/form-data" onsubmit="return validateAndSubmitForm()">
-    {% csrf_token %}
-    <h2 class="form-group container font-weight-bold">Add Food Item</h2>
-    <div class="form-group container">
-        <label for="FoodItemName">Name</label>
-        <input type="text" name="item_name" class="form-control" placeholder="Enter Food Item Name" required>
-    </div>
-    <div class="form-group container">
-        <label for="RestaurantSlogan">Food Description</label>
-        <input type="text" name="item_description" class="form-control" placeholder="Enter Food Item Description" required>
-    </div>
-    <div class="form-group container">
-        <label for="RestaurantDescription">Food Price</label>
-        <input name="item_price" class="form-control" placeholder="Enter Food Price" required>
-    </div>
-   
-    <div class="form-group container">
-        <label for="RestaurantImage">Upload Image</label>
-        <input type="file" name="item_image" class="form-control" required>
-    </div>
-    <div class="form-group container">
-        <input type="checkbox" required>
-        <label for="TermsAndConditions" class="form-check-label">Terms & Conditions</label>
-    </div>
-    <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="Submit">
-        <input type="reset" class="btn btn-secondary" value="Reset">
-        <a href="{% url 'dashboard' %}" class="btn btn-warning">Go Back</a>
-    </div>
+<form action="" method="POST" class="mx-auto card shadow container m-5 p-5" id="partner-form"
+  enctype="multipart/form-data">
+  {% csrf_token %}
+  <h2 class="form-group container font-weight-bold">Add Food Item</h2>
+  <div class="form-group container">
+    <label for="FoodItemName">Name</label>
+    <input type="text" name="item_name" class="form-control" placeholder="Enter Food Item Name" id="item-name" required>
+    <span class="error" id="error-item-name"></span>
+  </div>
+  <div class="form-group container">
+    <label for="FoodDescription">Food Description</label>
+    <input type="text" name="item_description" id="item-description" class="form-control"
+      placeholder="Enter Food Item Description" required>
+    <span class="error" id="error-item-description"></span>
+  </div>
+  <div class="form-group container">
+    <label for="FoodPrice">Food Price</label>
+    <input name="item_price" class="form-control" id="item-price" placeholder="Enter Food Price" required>
+    <span class="error" id="error-item-price"></span>
+  </div>
+  <div class="form-group container">
+    <label for="FoodImage">Upload Image</label>
+    <input type="file" name="item_image" id="item-image" class="form-control" required>
+  </div>
+  <div class="form-group container">
+    <input type="checkbox" required>
+    <label for="TermsAndConditions" class="form-check-label">Terms & Conditions</label>
+  </div>
+  <div class="form-group">
+    <input type="submit" class="btn btn-primary" value="Submit" id="btnSubmit">
+    <input type="reset" class="btn btn-secondary" value="Reset">
+    <a href="{% url 'restaurant-dashboard' %}" class="btn btn-warning">Go Back</a>
+  </div>
 </form>
 
 <div class="m-3">
-    <table class="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">Item No.</th>
-            <th scope="col">Image</th>
-            <th scope="col">Name</th>
-            <th scope="col">Description</th>
-            <th scope="col">Price</th>
-            <th scope="col">Actions</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-            {% for q in fooditems %}
-          <tr>
-            <th scope="row">{{forloop.counter}}</th>
-            <td><img src="/media/{{q.item_image}}" alt="error loading image" style="height:100px; width:100px;"></td>
-            <td>{{q.item_name}}</td>
-            <td>{{q.item_description}}</td>
-            <td>{{q.item_price}}</td>
-            <td><a href="#" class="btn btn-warning">Update</a></td>
-            <td><a href="#" class="btn btn-danger">Delete</a></td>
-          </tr>
-          {% endfor %}
-          
-        </tbody>
-      </table>  
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Item No.</th>
+        <th scope="col">Image</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Price</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for q in fooditems %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td><img src="{{ q.item_image.url }}" alt="Image not found" style="height:100px; width:100px;"></td>
+        <td>{{ q.item_name }}</td>
+        <td>{{ q.item_description }}</td>
+        <td>{{ q.item_price }}</td>
+        <td>
+          <a href="/partner-with-us/restaurant/update-item/{{q.id}}" class="btn btn-warning">Update</a>
+          <a href="/partner-with-us/restaurant/delete-item/{{q.id}}" class="btn btn-danger">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="text-center">No food items available</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
+{% include 'footer.html' %}
 
 
-{% endblock content %}
