@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     "users", 
     "customer", 
     "rider", 
-    "restaurant"
+    "restaurant",
+    "payment", 
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
