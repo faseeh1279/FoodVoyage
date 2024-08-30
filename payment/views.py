@@ -5,18 +5,25 @@ import hashlib
 from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
-JAZZCASH_MERCHANT_ID = "MC105945"
-JAZZCASH_PASSWORD = "0e110bsuua"
-JAZZCASH_RETURN_URL = "http://127.0.0.1:8000/success/"
-JAZZCASH_INTEGRITY_SALT = "yc2724095u"
+
+# Variables for jazz cash payment integration
+JAZZCASH_MERCHANT_ID = 'MC105945'
+JAZZCASH_PASSWORD = '0e110bsuua'
+JAZZCASH_INTEGRITY_SALT = 'yc2724095u'
+JAZZCASH_RETURN_URL = 'http://127.0.0.1:8000/success/'
+
+@csrf_exempt
+def success(request): 
+    return render(request, 'payment/success.html')
 
 
-def checkout(request):
 
+
+def purchase(request): 
     product_name = "Subscribe Webcog"
     product_price = 100
 
-    pp_Amount = int(product_price)
+    pp_Amount = (int(product_price) *100)
 
     current_datetime = datetime.now()
     pp_TxnDateTime = current_datetime.strftime('%Y%m%d%H%M%S')
@@ -26,30 +33,30 @@ def checkout(request):
 
     pp_TxnRefNo = "T" + pp_TxnDateTime
     post_data = {
-        "pp_Version": "1.0",
-        "pp_TxnType": "",
-        "pp_Language": "EN",
-        "pp_MerchantID": JAZZCASH_MERCHANT_ID,
-        "pp_SubMerchantID": "",
-        "pp_Password": JAZZCASH_PASSWORD,
-        "pp_BankID": "TBANK",
-        "pp_ProductID": "RETL",
-        "pp_TxnRefNo": pp_TxnRefNo,
-        "pp_Amount": pp_Amount,
-        "pp_TxnCurrency": "PKR",
-        "pp_TxnDateTime": pp_TxnDateTime,
-        "pp_BillReference": "billRef",
-        "pp_Description": "Description of transaction",
-        "pp_TxnExpiryDateTime": pp_TxnExpiryDateTime,
-        "pp_ReturnURL": JAZZCASH_RETURN_URL,
-        "pp_SecureHash": "",
-        "ppmpf_1": "1",
-        "ppmpf_2": "2",
-        "ppmpf_3": "3",
-        "ppmpf_4": "4",
-        "ppmpf_5": "5"
+    "pp_Version": "1.1",
+    "pp_TxnType": "MWALLET",
+    "pp_Language": "EN",
+    "pp_MerchantID": JAZZCASH_MERCHANT_ID,
+    "pp_SubMerchantID": '',
+    "pp_Password": JAZZCASH_PASSWORD,
+    "pp_BankID": 'TBANK',
+    "pp_ProductID": '1231314',
+    "pp_TxnRefNo": pp_TxnRefNo,
+    "pp_Amount": pp_Amount,
+    "pp_DiscountedAmount": "",
+    "pp_TxnCurrency": "PKR",
+    "pp_TxnDateTime": pp_TxnDateTime,
+    "pp_BillReference": "billref",
+    "pp_Description": "Description of transaction",
+    "pp_TxnExpiryDateTime": pp_TxnExpiryDateTime,
+    "pp_ReturnURL": " http://127.0.0.1:8000/success/ ",
+    "pp_SecureHash": "",
+    "ppmpf_1": "1",
+    "ppmpf_2": '2',
+    "ppmpf_3": '3',
+    "ppmpf_4": '4',
+    "ppmpf_5": '5',
     }
-
     sorted_string = "&".join(f"{key}={value}" for key , value in sorted(post_data.items()) if value != "")
     pp_SecureHash = hmac.new(
         JAZZCASH_INTEGRITY_SALT.encode(),
@@ -63,16 +70,4 @@ def checkout(request):
         "product_price":product_price,
         'post_data':post_data
     }
-
-    return render(request, 'payment/index.html', context)
-
-@csrf_exempt
-def success(request):
-    return render(request, 'success.html')
-
-
-def home(request): 
-    context = {
-        "url_name":"payments"
-    }
-    return render(request, "index.html", context)
+    return render(request, 'payment/purchase.html', context)
