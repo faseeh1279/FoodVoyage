@@ -28,17 +28,20 @@ urlpatterns = [
     path('contact/', views.contact_us, name='contact'), 
     path('services/', views.services_page, name='services'),
     path('order-now/', views.order_now, name='order'), 
-    path("add-to-cart/", views.add_to_cart, name="add-to-cart"),
+    path("view-cart/", views.view_cart, name="view-cart"),
+     
+
 
     # AJAX 
-    path("get-data/", views.get_data),
+    path('load-more-posts/', views.load_more_posts, name='load_more_posts'),
+   
 
     # External Apps 
     path('home/', include('users.urls')), 
     path('', include('customer.urls')), 
     path("partner-with-us/restaurant/", include("restaurant.urls")), 
     path("partner-with-us/rider/", include("rider.urls")),
-    path("add-to-cart/payment/", include("payment.urls")), 
+    path("view-cart/payment/", include("payment.urls")), 
 ]
 
 

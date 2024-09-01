@@ -1,83 +1,30 @@
+<!-- ordernow.html -->
 {% include 'navbar.html' %}
-
 
 <!-- Services Section -->
 {% load static %}
- <!-- blog section start -->
- <div class="blog_section layout_padding">
+<div class="blog_section layout_padding">
     <div class="container">
-       <div class="row">
-          <div class="col-md-12">
-             <h1 class="blog_taital">Cafes & Restaurants</h1>
-             <p class="blog_text"> search for 'lorem ipsum' will uncover many web sites still in their infancy.</p>
-          </div>
-       </div>
-       <div class="blog_section_2">
-          <div class="row">
-             <div class="col-md-4">
-                <div class="blog_box active">
-                   <div class="blog_img"><img src="{% static 'images/img-7.png' %}"></div>
-                   <h4 class="burger_text active">Burger House</h4>
-                   <h6 class="date_text">Monday - Saturday</h6>
-                   <h6 class="time_text">09:00 - 18:00</h6>
-                   <p class="lorem_text">looking at its layout. The point of using Lorem Ipsum is that it has alooking at its layout. The point of using Lorem Ipsum is that it has a</p>
-                </div>
-             </div>
-             <div class="col-md-4">
-                <div class="blog_box">
-                   <div class="blog_img"><img src="{% static 'images/img-8.png' %}"></div>
-                   <h4 class="burger_text" id="burger-testing">Burger House</h4>
-                   <h6 class="date_text">Monday - Saturday</h6>
-                   <h6 class="time_text">09:00 - 18:00</h6>
-                   <p class="lorem_text">looking at its layout. The point of using Lorem Ipsum is that it has alooking at its layout. The point of using Lorem Ipsum is that it has a</p>
-                </div>
-             </div>
-             <div class="col-md-4">
-                <div class="blog_box">
-                   <div class="blog_img"><img src="{% static 'images/img-9.png' %}"></div>
-                   <h4 class="burger_text">Burger House</h4>
-                   <h6 class="date_text">Monday - Saturday</h6>
-                   <h6 class="time_text">09:00 - 18:00</h6>
-                   <p class="lorem_text">looking at its layout. The point of using Lorem Ipsum is that it has alooking at its layout. The point of using Lorem Ipsum is that it has a</p>
-                </div>
-             </div>
-          </div>
-       </div>
-       <div class="blog_section_2">
-          <div class="row">
-             <div class="col-md-4">
-                <div class="blog_box">
-                   <div class="blog_img"><img src="{% static 'images/img-10.png' %}"></div>
-                   <h4 class="burger_text">Burger House</h4>
-                   <h6 class="date_text">Monday - Saturday</h6>
-                   <h6 class="time_text">09:00 - 18:00</h6>
-                   <p class="lorem_text">looking at its layout. The point of using Lorem Ipsum is that it has alooking at its layout. The point of using Lorem Ipsum is that it has a</p>
-                </div>
-             </div>
-             <div class="col-md-4">
-                <div class="blog_box">
-                   <div class="blog_img"><img src="{% static 'images/img-11.png' %}"></div>
-                   <h4 class="burger_text">Burger House</h4>
-                   <h6 class="date_text">Monday - Saturday</h6>
-                   <h6 class="time_text">09:00 - 18:00</h6>
-                   <p class="lorem_text">looking at its layout. The point of using Lorem Ipsum is that it has alooking at its layout. The point of using Lorem Ipsum is that it has a</p>
-                </div>
-             </div>
-             <div class="col-md-4">
-                <div class="blog_box">
-                   <div class="blog_img"><img src="{% static 'images/img-12.png' %}"></div>
-                   <h4 class="burger_text">Burger House</h4>
-                   <h6 class="date_text">Monday - Saturday</h6>
-                   <h6 class="time_text">09:00 - 18:00</h6>
-                   <p class="lorem_text">looking at its layout. The point of using Lorem Ipsum is that it has alooking at its layout. The point of using Lorem Ipsum is that it has a</p>
-                </div>
-             </div>
-          </div>
-       </div>
-       <div class="seemore_bt" id="load-more"><a href="#">See More</a></div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="blog_taital">Cafes & Restaurants</h1>
+                <p class="blog_text">Order Now from your favourite cafe's and restaurants.</p>
+            </div>
+        </div>
+        <div class="container-order-now mt-5" id="posts-container">
+            <!-- Initial products will be loaded here -->
+            {% for items in queryset %}
+            <div class="product-card-order-now">
+                <img src="/media/{{items.item_image}}" alt="Error Loading Image" class="product-image-order-now">
+                <h3 class="product-title-order-now">{{items.item_name}}</h3>
+                <p class="product-price-order-now">Rs.{{items.item_price}}</p>
+                <button class="add-to-cart-button-order-now">Add to Cart</button>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="seemore_bt" id="load-more"><a href="#">See More</a></div>
     </div>
- </div>
-
+</div>
 
 {% include 'footer.html' %}
 
