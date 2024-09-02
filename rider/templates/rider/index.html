@@ -6,8 +6,8 @@
         {% csrf_token %}
         <h2 class="form-group container font-weight-bold">Register to become our Rider</h2>
         <div class="form-group container">
-            <label for="RestaurantName">Restaurant Name</label>
-            <input type="text" name="restaurant_name" class="form-control" placeholder="Enter Your Restaurant Name" required>
+            <label for="RiderName">Rider Name</label>
+            <input type="text" name="rider_name" class="form-control" placeholder="Enter Your Name" required>
         </div>
         <div class="form-group container">
             <label for="RestaurantSlogan">Restaurant Slogan</label>
@@ -27,7 +27,7 @@
         </div>
         <div class="form-group container">
             <label for="RestaurantImage">Upload Image</label>
-            <input type="file" name="restaurant_image" class="form-control" required>
+            <input class="form-control" type="file" name="restaurant_image" required>
         </div>
         <div class="form-group container">
             <input type="checkbox" required>
