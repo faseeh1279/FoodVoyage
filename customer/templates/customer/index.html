@@ -1,5 +1,5 @@
 {% include 'header.html' %}
-{% load static %}
+
 <div class="container-order-now mt-5">
    <!-- Product Card 1 -->
     {% for items in queryset %}
@@ -7,13 +7,13 @@
         <img src="/media/{{items.item_image}}" alt="Error Loading Image" class="product-image-order-now">
         <h3 class="product-title-order-now">{{items.item_name}}</h3>
         <p class="product-price-order-now">Rs.{{items.item_price}}</p>
-        <button class="add-to-cart-button-order-now">Add to Cart</button>
+        <button class="add-to-cart-button-order-now" id="btn-add-to-cart" data-id="{{items.id}}">Add to Cart</button>
     </div>
     {% endfor %}
 </div>
 {% include 'footer.html' %}
 
 {% load static %}
-<script src="{% static 'customer/js/index.js' %}">
+<script src="{% static 'customer/js/newindex.js' %}">
 
 </script>

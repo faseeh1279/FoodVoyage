@@ -2,13 +2,22 @@ from django.shortcuts import render, HttpResponse
 from restaurant.models import AddFood
 from django.http import JsonResponse
 from django.core.paginator import Paginator
-
+from django.views.decorators.csrf import csrf_exempt
+from . import models 
 def index(request):
     items = AddFood.objects.all() 
     context = {"url_name":"Home", "queryset":items}
     return render(request, 'customer/index.html', context)
 
-
+@csrf_exempt
+def add_to_cart(request): 
+    if request.method == 'POST':
+        itemId = request.POST.get('itemId')
+        queryset = AddFood.objects.get(id = itemId)
+        models.AddToCart.objects.create(item_name = queryset.item_name, item_price = queryset.item_price, item_image = queryset.item_image)
+        return JsonResponse({"Message":"Successfully Added Data"})
+    else: 
+        return JsonResponse({"Message":"Invalid Request"})
 
 def notification(request): 
     context = {
