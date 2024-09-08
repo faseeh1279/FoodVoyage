@@ -22,7 +22,7 @@ def home(request):
         return redirect('/partner-with-us/restaurant/dashboard/')
 
     context = {"url_name":"Partner"}
-    return render(request, "restaurant/index.html")
+    return render(request, "restaurant/index.html", context)
 
 def dashboard(request): 
     return render(request, "restaurant/dashboard.html")

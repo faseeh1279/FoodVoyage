@@ -11,12 +11,12 @@ urlpatterns = [
     path('about/', views.about_page, name='about'),
     path('contact/', views.contact_us, name='contact'), 
     path('services/', views.services_page, name='services'),
-    path("view-cart/", views.view_cart, name="view-cart"),
+    
      
 
 
     # AJAX 
-    path('load-more-posts/', views.load_more_posts, name='load_more_posts'),
+    path("cart/", views.cart, name='simple-cart'), 
    
 
     # External Apps 
