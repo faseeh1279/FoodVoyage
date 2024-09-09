@@ -2,77 +2,63 @@
 
 
 
-    <form action="javascript:void(0)" method="POST" class="mx-auto card shadow container m-5 p-5" id="partner-form" enctype="multipart/form-data" onsubmit="return validateAndSubmitForm()">
-        {% csrf_token %}
-        <h2 class="form-group container font-weight-bold">Register to become our Rider</h2>
-        <div class="form-group container">
-            <label for="RiderName">Rider Name</label>
-            <input type="text" name="rider_name" class="form-control" placeholder="Enter Your Name" required>
+<form method="POST" class="mx-auto card shadow container m-5 p-5" id="partner-form"
+    enctype="multipart/form-data">
+    {% csrf_token %}
+    <h2 class="form-group container font-weight-bold">Register to become our Rider</h2>
+    <div class="form-group container">
+        <label for="RiderName" class="font-weight-bold">Rider Name</label>
+        <input type="text" name="rider_name" class="form-control" placeholder="Enter Your Name" required>
+    </div>
+    <div class="form-group container">
+        <label for="StartTime" class="font-weight-bold">Start Time</label>
+        <input type="time" name="start_time" class="form-control" placeholder="Enter Starting Time" required>
+        <label for="EndTime" class="font-weight-bold">End Time</label>
+        <input type="time" name="end_time" class="form-control" placeholder="Enter Ending Time" required>
+    </div>
+    <div class="form-group container">
+        <label for="Email">Email</label>
+        <input type="email" name="email" class="form-control" placeholder="Enter your Email" required>
+    </div>
+    <div class="form-group container">
+        <label for="City" class="font-weight-bold">Enter City</label>
+        <input type="text" name="city" class="form-control" placeholder="Enter your City" required>
+    </div>
+    <div class="form-group container">
+        <label for="RiderBio" class="font-weight-bold">Rider's Bio</label>
+        <textarea name="rider_bio" class="form-control" placeholder="Enter Your Rider's Bio" required></textarea>
+    </div>
+    <div class="form-group container">
+        <label for="phone_number" class="font-weight-bold">Phone Number</label>
+        <input type="number" name="phone_number" class="form-control" maxlength="11" placeholder="Enter Phone Number"
+            required>
+    </div>
+    <div class="form-group container">
+        <label for="Profile Image" class="font-weight-bold">Profile Image</label>
+        <input class="form-control" type="file" name="profile_image" required>
+    </div>
+    <div class="form-group container">
+        <input type="checkbox" required>
+        <label for="TermsAndConditions" class="form-check-label form-weight-bold">Terms & Conditions</label>
+    </div>
+    <div class="form-group container">
+        <label for="VehicleType" class="font-weight-bold">Vehicle Type</label>
+        <div class="form-check container">
+            <input class="form-check-input" type="radio" name="vehicle_type">
+            <label for="MotorCycle">Motor Cycle</label>
         </div>
-        <div class="form-group container">
-            <label for="RestaurantSlogan">Restaurant Slogan</label>
-            <input type="text" name="restaurant_slogan" class="form-control" placeholder="Enter Your Restaurant Slogan" required>
+        <div class="form-check container">
+            <input class="form-check-input" type="radio" name="vehicle_type">
+            <label for="MotorCar">Motor Car</label>
+    
         </div>
-        <div class="form-group container">
-            <label for="RestaurantLocation">Restaurant Location</label>
-            <input type="text" name="restaurant_location" class="form-control" placeholder="Enter Your Restaurant Location" required>
-        </div>
-        <div class="form-group container">
-            <label for="RestaurantDescription">Restaurant Description</label>
-            <textarea name="restaurant_description" class="form-control" placeholder="Enter Your Restaurant Description" required></textarea>
-        </div>
-        <div class="form-group container">
-            <label for="phone_number">Phone Number</label>
-            <input type="number" name="phone_number" class="form-control" maxlength="11" placeholder="Enter Phone Number" required>
-        </div>
-        <div class="form-group container">
-            <label for="RestaurantImage">Upload Image</label>
-            <input class="form-control" type="file" name="restaurant_image" required>
-        </div>
-        <div class="form-group container">
-            <input type="checkbox" required>
-            <label for="TermsAndConditions" class="form-check-label">Terms & Conditions</label>
-        </div>
-        <div class="form-group container">
-            <input type="hidden" id="latitude" name="latitude">
-            <input type="hidden" id="longitude" name="longitude">
-        </div>
-        <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Submit">
-            <input type="reset" class="btn btn-secondary" value="Reset">
-        </div>
-    </form>
+    </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        getLocation();
-    });
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Submit">
+        <input type="reset" class="btn btn-secondary" value="Reset">
+    </div>
+</form>
 
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-
-    function showPosition(position) {
-        document.getElementById("latitude").value = position.coords.latitude;
-        document.getElementById("longitude").value = position.coords.longitude;
-    }
-
-    function validateAndSubmitForm() {
-        var latitude = document.getElementById("latitude").value;
-        var longitude = document.getElementById("longitude").value;
-
-        if (!latitude || !longitude) {
-            alert("Could not get your location. Please make sure location services are enabled and try again.");
-            return false;
-        }
-
-        return true;
-    }
-</script>
 
 {% include 'footer.html' %}
-

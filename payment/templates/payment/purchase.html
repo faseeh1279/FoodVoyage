@@ -22,7 +22,8 @@
 
 <body>
 
-    <h1>JazzCash Payment</h1>
+    <div class="container card mx-auto col-6 p-3">
+        <h1>JazzCash Payment</h1>
     <h1>{{ product_name }}</h1>
     <h1>{{ product_price }}</h1>
     <form method="post" action="https://sandbox.jazzcash.com.pk/CustomerPortal/transactionmanagement/merchantform/">
@@ -30,8 +31,9 @@
         {% for key, value in post_data.items %}
         <input type="hidden" name="{{ key }}" value="{{ value }}">
         {% endfor %}
-        <button type="submit" class="jazzcash-button">Pay with JazzCash</button>
+        <button type="submit" class="jazzcash-button text-center">Pay with JazzCash</button>
     </form>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
