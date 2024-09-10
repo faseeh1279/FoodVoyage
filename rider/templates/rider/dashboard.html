@@ -1,4 +1,63 @@
 {% include 'rider/layouts/navbar.html' %}
 
+        <div class="btn-group text-right" id="toggle_event_editing">
+            <button type="button" class="btn btn-info locked_active" id="btn-turn-off">OFF</button>
+            <button type="button" class="btn btn-default unlocked_inactive" id="btn-turn-on">ON</button>
+        </div>
+   
+<section class="container" id="rider-dashboard">
+    <div class="row">
+        <div class="col">
+            <div class="card shadow m-2 p-5 text-center" style="font-size:40px">
+                67
+                <div style="font-size:20px">
+                    Orders Completed
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card shadow m-2 p-5 text-center" style="font-size:40px">
+                1500000 Rs.
+                <div style="font-size:20px">
+                    Wallet
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="container">
+        <table class="table">
+            <thead style="background-color: #e42e0c; color:white">
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">Location</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                
+                <td>
+                    <button class="btn btn-success">Accept</button>
+                    <button class="btn btn-danger">Decline</button>
+                </td>
+              </tr>
+              
+            </tbody>
+          </table>
+          
+         
+    </div>
+</section>
 
 {% include 'footer.html' %}
+
+{% load static %}
+<script src="{% static 'rider/js/dashboard.js' %}"></script>

@@ -73,3 +73,11 @@ def delete_data(request):
         return JsonResponse({"Error":"Invalid Request"})
 
 
+def get_cart_details(request): 
+    if request.method == "GET": 
+        user = get_user(request) 
+        users_cart = models.Users_Cart.objects.get(username = user.username)
+        data = models.AddToCart.objects.filter(users_cart = users_cart).values() 
+        return JsonResponse(list(data), safe=False)
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})

@@ -2,8 +2,7 @@ $(document).ready(function(){
     $.ajax({
         url:"/cart/", 
         type:"GET", 
-        success:function(data){
-            console.log(data); 
+        success:function(data){ 
             let counter = 0; 
             data.forEach(items => {
                 counter ++; 
@@ -11,7 +10,7 @@ $(document).ready(function(){
             $("#cart-number-logo").text(counter); 
         }, 
         error:function(data){
-            console.log(data); 
+            // console.log(data); 
         }
     })
 }); 

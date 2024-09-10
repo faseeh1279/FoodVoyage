@@ -1,10 +1,9 @@
 $(document).ready(function(){
-    
+   
     $.ajax({
         type: "GET", 
         url : "/get-data/", 
         success:function(data){
-            console.log(data); 
             let tablebody = $("#table-body");
             let gst_total = $("#total-price");
             let price = 0; 
@@ -32,7 +31,7 @@ $(document).ready(function(){
 
         }, 
         error:function(error){
-            console.log(error); 
+            // console.log(error); 
         }
     }); 
 
@@ -46,7 +45,7 @@ $(document).ready(function(){
         mydata = {
             itemId : itemId 
         }
-        console.log(itemId); 
+        
         $.ajax({
             type:"POST", 
             url: "/delete-data/", 
@@ -58,9 +57,44 @@ $(document).ready(function(){
                 gst_total.text(newTotal);  // Update the total price   
             }, 
             error:function(data){
-                console.log(data); 
+                // console.log(data); 
             }
         })
+    }); 
+
+
+    $("#place-order").click(function(){
+        ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/")
+        ws.onopen = function(event){
+            console.log("Connected..", event); 
+            var jsonData = {
+                "username":"Faseeh Raza", 
+                "message":"Order has been Placed", 
+                "time_stamp": new Date().toISOString() 
+            }
+            ws.send(JSON.stringify(jsonData));
+        }
+        ws.onmessage = function(event){
+            data = JSON.parse(event.data); 
+            console.log("Server : ", data); 
+        }
+        ws.onclose = function(event){
+            console.log("Disconnected", event); 
+        }
+        
+        $.ajax({
+            url:"/get-cart-details/", 
+            type:"GET",
+            success:function(data){
+                data.forEach(items=>{
+                    // console.log(`${items.item_name}`); 
+                }); 
+            }, 
+            error:function(data){
+                // console.log(data); 
+            }
+        })
+         
     }); 
 
 });
