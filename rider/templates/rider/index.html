@@ -7,18 +7,10 @@
     {% csrf_token %}
     <h2 class="form-group container font-weight-bold">Register to become our Rider</h2>
     <div class="form-group container">
-        <label for="RiderName" class="font-weight-bold">Rider Name</label>
-        <input type="text" name="rider_name" class="form-control" placeholder="Enter Your Name" required>
-    </div>
-    <div class="form-group container">
         <label for="StartTime" class="font-weight-bold">Start Time</label>
         <input type="time" name="start_time" class="form-control" placeholder="Enter Starting Time" required>
         <label for="EndTime" class="font-weight-bold">End Time</label>
         <input type="time" name="end_time" class="form-control" placeholder="Enter Ending Time" required>
-    </div>
-    <div class="form-group container">
-        <label for="Email">Email</label>
-        <input type="email" name="email" class="form-control" placeholder="Enter your Email" required>
     </div>
     <div class="form-group container">
         <label for="City" class="font-weight-bold">Enter City</label>

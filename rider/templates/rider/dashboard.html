@@ -80,7 +80,7 @@
             <td>${data.customer_location}</td>
             <td>${data.time_stamp}</td>
             <td>
-                <button class="btn btn-success" id="btn-accept" data-id="${data.customer_id}">Accept</button>
+                <button class="btn btn-success" id="btn-accept" data-id="${data.customer_id}"><a href="{% url 'deliver-order-to-customer' %}">Accept</a></button>
                 <button class="btn btn-danger" id="btn-decline" data-id="${data.customer_id}">Decline</button>
             </td>
 
@@ -109,6 +109,23 @@
         "customer_location":data.customer_location, 
         "rider":rider_name
         };
+        mydata = {
+            "customer_id":data.users_cart_id, 
+            "customer_name":data.customer_name, 
+            "order_status":"True"
+        }
+        $.ajax({
+            url:"/partner-with-us/rider/order-details/", 
+            type:"POST",
+            data: mydata, 
+            success:function(event){
+                console.log(event); 
+            }, 
+            error:function(event){
+                console.log(event); 
+            }
+
+        })
         ws.send(JSON.stringify(jsonData)); 
     }); 
 
