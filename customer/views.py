@@ -3,6 +3,7 @@ from restaurant.models import AddFood
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import models 
+
 from django.contrib.auth.decorators import login_required
 
 @login_required
@@ -79,5 +80,14 @@ def get_cart_details(request):
         users_cart = models.Users_Cart.objects.get(username = user.username)
         data = models.AddToCart.objects.filter(users_cart = users_cart).values() 
         return JsonResponse(list(data), safe=False)
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
+    
+def cart(request): 
+    if request.method == "GET": 
+        user = get_user(request)
+        users_cart = models.Users_Cart.objects.get(username=user.username)
+        data = list(models.AddToCart.objects.filter(users_cart=users_cart).values())
+        return JsonResponse(data, safe=False)
     else: 
         return JsonResponse({"Error":"Invalid Request"})

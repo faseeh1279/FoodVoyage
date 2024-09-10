@@ -24,22 +24,6 @@ def contact_us(request):
 def get_user(request): 
     return request.user 
 
-def cart(request): 
-    if request.method == "GET": 
-        user = get_user(request)
-        users_cart = Users_Cart.objects.get(username=user.username)
-        data = list(AddToCart.objects.filter(users_cart=users_cart).values())
-        return JsonResponse(data, safe=False)
-    else: 
-        return JsonResponse({"Error":"Invalid Request"})
-
-
-
-
-
-
-
-
 def notification(request): 
     context = {
         "url_name":"notification"

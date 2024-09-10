@@ -19,6 +19,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 application = ProtocolTypeRouter({
     "http":get_asgi_application(), 
     'websocket': URLRouter(
-        customer.routing.websocket_urlpatterns 
+        customer.routing.websocket_urlpatterns + 
+        restaurant.routing.websocket_urlpatterns + 
+        rider.routing.websocket_urlpatterns
     )
 })

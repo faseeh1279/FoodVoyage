@@ -1,15 +1,113 @@
-$(document).ready(function(){
+$(document).ready(function () {
+    var jsonData = {
+        "username":"Faseeh Raza", 
+        "message":"Place Order", 
+        "time_stamp": new Date().toISOString() 
+    }
+    var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/"); 
+    ws.onopen = function(event){
+        console.log("Connected...", event);
+        ws.send(JSON.stringify(jsonData));
+    }
+    ws.onmessage = function(event){
+        data = JSON.parse(event.data); 
+        console.log("Message : ", data); 
+    }
+    ws.onclose = function(event){
+        console.log("Disconnected...", event);
+    }
+     
+    
+    populate_cart();
+
+    $(document).on("click", "#btn-delete",function(){
+        const itemId = $(this).data('id');
+        const row = $(this).closest("tr"); // Gets the closes tr 
+        const itemPrice = Number(row.find(".item-price").text()); // Get the price of the item to remove
+        let gst_total = $("#total-price"); // Get the total price element
+        let currentTotal = Number(gst_total.text()); // Get the current total price
+
+        mydata = {
+            itemId: itemId
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/delete-data/",
+            data: mydata,
+            success: function (data) {
+                cart_logo_update(); 
+                row.remove();  // Remove the row from the table
+                // Update the total price dynamically
+                const newTotal = currentTotal - itemPrice;
+                gst_total.text(newTotal);  // Update the total price   
+
+            },
+            error: function (data) {
+                // console.log(data); 
+            }
+        });
+    }); 
+
+
+    $("#place-order").click(function () {
+        
+        // $.ajax({
+        //     url: "/get-cart-details/",
+        //     type: "GET",
+        //     success: function (data) {
+        //         data.forEach(items => {
+        //             // console.log(`${items.item_name}`); 
+        //         });
+        //     },
+        //     error: function (data) {
+        //         // console.log(data); 
+        //     }
+        // });
+
+    });
+
+});
+
+// Updates the Counter in the Navbar Cart 
+function cart_logo_update(){
    
+        $.ajax({
+            url:"/cart/", 
+            type:"GET", 
+            success:function(data){ 
+                let counter = 0; 
+                data.forEach(items => {
+                    counter ++; 
+                });
+                $("#cart-number-logo").text(counter); 
+            }, 
+            error:function(data){
+                // console.log(data); 
+            }
+        })
+   
+}
+
+//  Websocket Connection for placing order. 
+function place_order(){
+   
+}
+
+
+
+// Populates the Cart 
+function populate_cart(){
     $.ajax({
-        type: "GET", 
-        url : "/get-data/", 
-        success:function(data){
+        type: "GET",
+        url: "/get-data/",
+        success: function (data) {
             let tablebody = $("#table-body");
             let gst_total = $("#total-price");
-            let price = 0; 
+            let price = 0;
             data.forEach(items => {
-                let row = 
-                `
+                let row =
+                    `
                  <!-- Cart items will be dynamically inserted here -->
                  <tr>
                     <td>
@@ -24,78 +122,15 @@ $(document).ready(function(){
                     </td>
                  </tr>
                 `
-                price = price + Number(items.item_price); 
-                tablebody.append(row); 
+                price = price + Number(items.item_price);
+                tablebody.append(row);
             });
-            gst_total.text(price); 
+            gst_total.text(price);
 
-        }, 
-        error:function(error){
+        },
+        error: function (error) {
             // console.log(error); 
         }
-    }); 
-
-    $(document).on("click", "#btn-delete", function(){
-        const itemId = $(this).data('id'); 
-        const row = $(this).closest("tr"); // Gets the closes tr 
-        const itemPrice = Number(row.find(".item-price").text()); // Get the price of the item to remove
-        let gst_total = $("#total-price"); // Get the total price element
-        let currentTotal = Number(gst_total.text()); // Get the current total price
-
-        mydata = {
-            itemId : itemId 
-        }
-        
-        $.ajax({
-            type:"POST", 
-            url: "/delete-data/", 
-            data: mydata, 
-            success:function(data){
-                row.remove();  // Remove the row from the table
-                // Update the total price dynamically
-                const newTotal = currentTotal - itemPrice; 
-                gst_total.text(newTotal);  // Update the total price   
-            }, 
-            error:function(data){
-                // console.log(data); 
-            }
-        })
-    }); 
-
-
-    $("#place-order").click(function(){
-        ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/")
-        ws.onopen = function(event){
-            console.log("Connected..", event); 
-            var jsonData = {
-                "username":"Faseeh Raza", 
-                "message":"Order has been Placed", 
-                "time_stamp": new Date().toISOString() 
-            }
-            ws.send(JSON.stringify(jsonData));
-        }
-        ws.onmessage = function(event){
-            data = JSON.parse(event.data); 
-            console.log("Server : ", data); 
-        }
-        ws.onclose = function(event){
-            console.log("Disconnected", event); 
-        }
-        
-        $.ajax({
-            url:"/get-cart-details/", 
-            type:"GET",
-            success:function(data){
-                data.forEach(items=>{
-                    // console.log(`${items.item_name}`); 
-                }); 
-            }, 
-            error:function(data){
-                // console.log(data); 
-            }
-        })
-         
-    }); 
-
-});
+    });
+}
 

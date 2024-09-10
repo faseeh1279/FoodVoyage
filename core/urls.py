@@ -15,8 +15,7 @@ urlpatterns = [
      
 
 
-    # AJAX 
-    path("cart/", views.cart, name='simple-cart'), 
+    
    
 
     # External Apps 
