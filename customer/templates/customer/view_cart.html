@@ -10,6 +10,7 @@
                     <th>Product Image</th>
                     <th>Product Name</th>
                     <th>Price</th>
+                    <th>Restaurant Name</th>
                     <th>Quantity</th>
                     <th>Total</th>
                     <th>Actions</th>
@@ -27,7 +28,7 @@
             </div>
             <div class="btn" style="background-color: #e42e0c; color: white; width: 180px; text-align: center; padding: 10px; cursor: pointer; border-radius: 5px;" id="place-order">
                 <!-- {% url 'checkout' %} -->
-                <a href="#" style="color:white">Pay With Jazz Cash</a>
+                <a href="{% url 'place-order' %}" style="color:white">Pay With Jazz Cash</a>
             </div>
         </div>
     </div>

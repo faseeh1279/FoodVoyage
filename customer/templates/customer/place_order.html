@@ -1,0 +1,85 @@
+{% include 'navbar.html' %}
+
+<form action="javascript:void(0)" method="POST" class="mx-auto card shadow container m-5 p-5" id="partner-form" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h2 class="form-group container font-weight-bold">Fill the Following Form</h2>
+    <div class="form-group container" id="customer-phoneNumber">
+        <label for="CustomerPhoneNumber">Phone Number</label>
+        <input type="text" name="phone_number" class="form-control" placeholder="Enter Your Phone Number">
+    </div>
+    <div class="form-group container" id="customer-location">
+        <label for="CustomerLocation">Customer Location</label>
+        <input type="text" name="customer_location" class="form-control" placeholder="Enter Your Location">
+    </div>
+    
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary" value="Submit" id="btn-place-order">
+        <input type="reset" class="btn btn-secondary" value="Reset">
+    </div>
+</form>
+
+{% include 'footer.html' %}
+
+<script>
+    var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/"); 
+    var jsonData; 
+    $(document).ready(function(){
+        ws.onopen = function(event){
+        console.log("Connected...", event);
+        }
+
+        
+        $.ajax({
+            url:"/place-order-details/", 
+            type:"GET", 
+            success:function(data){
+                data.forEach(items => {
+                    if(items.phone_number === "0300*******"){
+                        $("#customer-phoneNumber").show();
+                    }
+                    else{
+                        $("#customer-phoneNumber").hide();
+                    }
+                });
+            }, 
+            error:function(data){
+
+            }
+
+        });
+    
+    
+    });
+
+    $("#btn-place-order").click(function(){
+        websocket_connection(); 
+    }); 
+    function websocket_connection(){
+        // Getting the data from the server 
+        $.ajax({
+            url:"/place-order-credentials/", 
+            type:"GET",
+            success:function(data){
+                console.log(data);
+                console.log("JSON DATA IS WORKING PROPERLY"); 
+                data.forEach(items => {
+                    
+                    jsonData = {
+                    "customer_name":items.customer_name, 
+                    "message":"PlaceOrder", 
+                    "time_stamp": items.current_datetime, 
+                    "customer_id":items.users_cart_id, 
+                    "customer_location":items.customer_location
+                    };
+                });
+                ws.send(JSON.stringify(jsonData)); 
+                ws.onclose = function(event){
+                    console.log("Disconnected", event); 
+                }; 
+            }, 
+            error:function(data){
+
+            }
+        }); 
+}
+</script>

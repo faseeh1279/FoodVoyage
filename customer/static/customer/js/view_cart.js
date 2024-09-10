@@ -1,28 +1,15 @@
 $(document).ready(function () {
-    var jsonData = {
-        "username":"Faseeh Raza", 
-        "message":"Place Order", 
-        "time_stamp": new Date().toISOString() 
-    }
-    var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/"); 
-    ws.onopen = function(event){
-        console.log("Connected...", event);
-        ws.send(JSON.stringify(jsonData));
-    }
-    ws.onmessage = function(event){
-        data = JSON.parse(event.data); 
-        console.log("Message : ", data); 
-    }
-    ws.onclose = function(event){
-        console.log("Disconnected...", event);
-    }
+    
+   
+    
+    
      
     
     populate_cart();
 
     $(document).on("click", "#btn-delete",function(){
         const itemId = $(this).data('id');
-        const row = $(this).closest("tr"); // Gets the closes tr 
+        const row = $(this).closest("tr"); // Gets the closest tr 
         const itemPrice = Number(row.find(".item-price").text()); // Get the price of the item to remove
         let gst_total = $("#total-price"); // Get the total price element
         let currentTotal = Number(gst_total.text()); // Get the current total price
@@ -50,22 +37,22 @@ $(document).ready(function () {
     }); 
 
 
-    $("#place-order").click(function () {
+    // $("#place-order").click(function () {
         
-        // $.ajax({
-        //     url: "/get-cart-details/",
-        //     type: "GET",
-        //     success: function (data) {
-        //         data.forEach(items => {
-        //             // console.log(`${items.item_name}`); 
-        //         });
-        //     },
-        //     error: function (data) {
-        //         // console.log(data); 
-        //     }
-        // });
+    //     // $.ajax({
+    //     //     url: "/get-cart-details/",
+    //     //     type: "GET",
+    //     //     success: function (data) {
+    //     //         data.forEach(items => {
+    //     //             // console.log(`${items.item_name}`); 
+    //     //         });
+    //     //     },
+    //     //     error: function (data) {
+    //     //         // console.log(data); 
+    //     //     }
+    //     // });
 
-    });
+    // });
 
 });
 
@@ -89,10 +76,6 @@ function cart_logo_update(){
    
 }
 
-//  Websocket Connection for placing order. 
-function place_order(){
-   
-}
 
 
 
@@ -115,6 +98,7 @@ function populate_cart(){
                     </td>
                     <td>${items.item_name}</td>
                     <td class="item-price">${items.item_price}</td>
+                    <td>${items.restaurant_name}</td> 
                     <td>2</td>
                     <td>${items.item_price}</td>
                     <td>
@@ -133,4 +117,6 @@ function populate_cart(){
         }
     });
 }
+
+
 

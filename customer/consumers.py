@@ -15,30 +15,36 @@ class MySynConsumer(SyncConsumer):
     
     def websocket_receive(self, event):
         jsonData = json.loads(event["text"]) 
-        username = jsonData.get("username")
+        customer_name = jsonData.get("customer_name")
         message = jsonData.get("message")
         time_stamp = jsonData.get("time_stamp")
-        print("Client", event["text"])
+        customer_id = jsonData.get("customer_id")
+        customer_location = jsonData.get("customer_location")
         async_to_sync(self.channel_layer.group_send)(
             "order_placed",
             {
-            "type":"place.order", 
-            "username":username, 
-            "message":message, 
-            "time_stamp":time_stamp
+                "type": "place.order",
+                "customer_name": customer_name,
+                "message": message,
+                "time_stamp": time_stamp,
+                "customer_id": customer_id, 
+                "customer_location":customer_location
             }
         )
         
     def place_order(self, event): 
         response_data = {
-            "username":event["username"],
-            "message":event["message"],
-            "time_stamp":event["time_stamp"]
+            "customer_name":event["customer_name"], 
+            "message":event["message"], 
+            "time_stamp":event["time_stamp"],
+            "customer_id":event["customer_id"], 
+            "customer_location":event["customer_location"]
         }
         self.send({
-            "type":"websocket.send", 
-            "text":json.dumps(response_data) 
-        })
+            "type":"websocket.send",
+            "text": json.dumps(response_data)
+            })
+        
 
     def websocket_disconnect(self, event): 
         print("Disconnected...", event) 
