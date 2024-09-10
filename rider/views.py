@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from . import models 
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
 # Create your views here.
 
 
@@ -40,4 +42,13 @@ def index(request):
 
 def dashboard(request): 
     return render(request, "rider/dashboard.html")
+
+
+def rider_name(request): 
+    if request.method == "GET": 
+        user = get_user(request)
+        data = list(models.Rider.objects.filter(user = user.username).values())
+        return JsonResponse(data,safe=False )
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
 

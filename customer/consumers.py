@@ -20,6 +20,7 @@ class MySynConsumer(SyncConsumer):
         time_stamp = jsonData.get("time_stamp")
         customer_id = jsonData.get("customer_id")
         customer_location = jsonData.get("customer_location")
+        rider = jsonData.get("rider") 
         async_to_sync(self.channel_layer.group_send)(
             "order_placed",
             {
@@ -28,7 +29,8 @@ class MySynConsumer(SyncConsumer):
                 "message": message,
                 "time_stamp": time_stamp,
                 "customer_id": customer_id, 
-                "customer_location":customer_location
+                "customer_location":customer_location, 
+                "rider":rider
             }
         )
         
@@ -38,7 +40,8 @@ class MySynConsumer(SyncConsumer):
             "message":event["message"], 
             "time_stamp":event["time_stamp"],
             "customer_id":event["customer_id"], 
-            "customer_location":event["customer_location"]
+            "customer_location":event["customer_location"],
+            "rider":event["rider"]
         }
         self.send({
             "type":"websocket.send",

@@ -32,24 +32,14 @@
         <table class="table">
             <thead style="background-color: #e42e0c; color:white">
               <tr>
-                <th scope="col">No</th>
+                <th scope="col">Customer Name</th>
                 <th scope="col">Location</th>
                 <th scope="col">Phone Number</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                
-                <td>
-                    <button class="btn btn-success" id="btn-accept">Accept</button>
-                    <button class="btn btn-danger" id="btn-decline">Decline</button>
-                </td>
-              </tr>
-              
+            <tbody id="table-body">
+             
             </tbody>
           </table>
           
@@ -61,19 +51,65 @@
 
 
 <script>
+    // Ajax Function to get rider name 
+    var rider_name; 
+    $.ajax({
+        url: "/partner-with-us/rider/get-rider-name/", 
+        type:"GET", 
+        success:function(data){
+            rider_name = data.name; 
+        }, 
+        error:function(data){
+            console.log(data); 
+        }
+        
+    }); 
     var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");  
+    var data; 
     ws.onopen = function(event){
         console.log('Connected to the server.',event);
         
         
     }
     ws.onmessage = function(event){
-        let data = JSON.parse(event.data); 
-        
+        data = JSON.parse(event.data); 
+        let row = 
+        `
+        <tr> 
+            <td>${data.customer_name}</td>
+            <td>${data.customer_location}</td>
+            <td>${data.time_stamp}</td>
+            <td>
+                <button class="btn btn-success" id="btn-accept" data-id="${data.customer_id}">Accept</button>
+                <button class="btn btn-danger" id="btn-decline" data-id="${data.customer_id}">Decline</button>
+            </td>
+
+        </tr>
+        `
+        $("#table-body").append(row); 
         console.log(data);  
+        console.log(data.customer_name); 
         
     }
     ws.onclose = function(event){
         console.log("Disconnedted...",event); 
     }
+    // Decline The Order Button 
+    $(document).on("click", "#btn-decline", function(){
+        $(this).parent().parent().hide(); 
+    }); 
+
+    // Accepting The Order 
+    $(document).on("click", "#btn-accept", function(){
+        jsonData = {
+        "customer_name":data.customer_name, 
+        "message":"PlaceOrder", 
+        "time_stamp": data.current_datetime, 
+        "customer_id":data.users_cart_id, 
+        "customer_location":data.customer_location, 
+        "rider":rider_name
+        };
+        ws.send(JSON.stringify(jsonData)); 
+    }); 
+
 </script>

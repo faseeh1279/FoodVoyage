@@ -69,7 +69,8 @@
                     "message":"PlaceOrder", 
                     "time_stamp": items.current_datetime, 
                     "customer_id":items.users_cart_id, 
-                    "customer_location":items.customer_location
+                    "customer_location":items.customer_location, 
+                    "rider":"riderName"
                     };
                 });
                 ws.send(JSON.stringify(jsonData)); 
