@@ -13,13 +13,14 @@ class Rider(models.Model):
     profile_image = models.ImageField(upload_to="RiderProfileImage")
     vehicle_type = models.CharField(max_length=50)
     def __str__(self): 
-        self.name 
+        return self.name  
 
 class OrderDetails(models.Model): 
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE, related_name='pending_orders')
     customer_id = models.CharField(max_length=100)
     customer_name = models.CharField(max_length=100)
     order_status = models.BooleanField(default=False) # False means that order is pending and True means that order has been delivered. 
+    rider_name = models.CharField(max_length=100, default="rider_name")
 
 
 

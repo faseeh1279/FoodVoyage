@@ -37,16 +37,16 @@ def index(request):
             vehicle_type = vehicle_type
         )
         return render(request, 'rider/index.html')
-
-
-    return render(request,"rider/index.html")
+    else: 
+        return render(request,"rider/index.html")
 
 def dashboard(request): 
     user = get_user(request)
     current_user = models.Rider.objects.get(name = user.username)
-    data = models.OrderDetails.objects.filter(name = current_user)
-    if data.order_status == False: 
-        return redirect("deliver-order-to-customer")
+    if models.OrderDetails.objects.filter(rider_name = current_user).exists(): 
+        data = models.OrderDetails.objects.get(rider_name = current_user)
+        if data.order_status == False: 
+            return redirect("deliver-order-to-customer")
     else: 
         return render(request, "rider/dashboard.html")
 
@@ -54,7 +54,7 @@ def dashboard(request):
 def rider_name(request): 
     if request.method == "GET": 
         user = get_user(request)
-        data = list(models.Rider.objects.filter(user = user.username).values())
+        data = list(models.Rider.objects.filter(name = user.username).values())
         return JsonResponse(data,safe=False )
     else: 
         return JsonResponse({"Error":"Invalid Request"})
@@ -65,17 +65,28 @@ def deliver_order(request):
 
 @csrf_exempt
 def order_details(request): 
+    user = get_user(request) 
     if request.method == "POST": 
         customer_id = request.POST.get("customer_id")
         customer_name = request.POST.get("customer_name")
         order_status = request.POST.get("order_status")
+        rider_name = request.POST.get("rider_name") 
+        
+        # Use get() to retrieve a single Rider object
+        try:
+            current_user = models.Rider.objects.get(name=user.username)
+        except models.Rider.DoesNotExist:
+            return JsonResponse({"Error": "Rider not found"}, status=404)
+        
         models.OrderDetails.objects.create(
-            customer_id = customer_id, 
-            customer_name = customer_name, 
-            order_status = order_status
+            rider=current_user,  # Correct assignment of the rider ForeignKey
+            customer_id=customer_id, 
+            customer_name=customer_name, 
+            order_status=order_status,
+            rider_name=rider_name 
         )
-        return JsonResponse({"Success":"Order Details Added Successfully"})
+        return JsonResponse({"Success": "Order Details Added Successfully"})
     else: 
-        return JsonResponse({"Error":"Invalid Request"})
+        return JsonResponse({"Error": "Invalid Request"})
 
 
