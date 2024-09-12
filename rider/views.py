@@ -15,7 +15,7 @@ def index(request):
     user = get_user(request) 
     if models.Rider.objects.filter(email = user.email).exists(): 
         return redirect("/partner-with-us/rider/dashboard/")
-    if request.method == "POST": 
+    elif request.method == "POST": 
         name = user.username 
         email = user.email
         start_time = request.POST.get("start_time")
@@ -42,12 +42,24 @@ def index(request):
 
 def dashboard(request): 
     user = get_user(request)
-    current_user = models.Rider.objects.get(name = user.username)
-    if models.OrderDetails.objects.filter(rider_name = current_user).exists(): 
-        data = models.OrderDetails.objects.get(rider_name = current_user)
-        if data.order_status == False: 
-            return redirect("deliver-order-to-customer")
-    else: 
+    
+    # Get the current rider object
+    try:
+        current_user = models.Rider.objects.get(name=user.username)
+        print("Problem#1: Rider found")
+    except models.Rider.DoesNotExist:
+        print("Problem#1: Rider not found")
+        return redirect("/some-error-page/")  # Redirect or handle the case when rider is not found
+
+    # Filter all pending orders for the current rider
+    pending_orders = models.OrderDetails.objects.filter(rider=current_user, order_status=False)
+    
+    if pending_orders.exists(): 
+        print("Problem#2: Pending order found")
+        # If there's at least one pending order, you can redirect to the delivery page
+        return redirect("/partner-with-us/rider/deliver-order-to-customer/")
+    else:
+        print("Problem#5: No pending orders")
         return render(request, "rider/dashboard.html")
 
 

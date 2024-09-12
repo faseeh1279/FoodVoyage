@@ -102,9 +102,9 @@
     $(document).on("click", "#btn-accept", function(){
         jsonData = {
         "customer_name":data.customer_name, 
-        "message":"PlaceOrder", 
-        "time_stamp": data.current_datetime, 
-        "customer_id":data.users_cart_id, 
+        "message":"OrderAccepted", 
+        "time_stamp": data.time_stamp, 
+        "customer_id":data.customer_id, 
         "customer_location":data.customer_location, 
         "rider":rider_name
         };

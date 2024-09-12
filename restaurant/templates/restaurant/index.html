@@ -33,46 +33,13 @@
             <input type="checkbox" required>
             <label for="TermsAndConditions" class="form-check-label">Terms & Conditions</label>
         </div>
-        <div class="form-group container">
-            <input type="hidden" id="latitude" name="latitude">
-            <input type="hidden" id="longitude" name="longitude">
-        </div>
+        
         <div class="form-group">
             <input type="submit" class="btn btn-primary" value="Submit">
             <input type="reset" class="btn btn-secondary" value="Reset">
         </div>
     </form>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        getLocation();
-    });
-
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            alert("Geolocation is not supported by this browser.");
-        }
-    }
-
-    function showPosition(position) {
-        document.getElementById("latitude").value = position.coords.latitude;
-        document.getElementById("longitude").value = position.coords.longitude;
-    }
-
-    function validateAndSubmitForm() {
-        var latitude = document.getElementById("latitude").value;
-        var longitude = document.getElementById("longitude").value;
-
-        if (!latitude || !longitude) {
-            alert("Could not get your location. Please make sure location services are enabled and try again.");
-            return false;
-        }
-
-        return true;
-    }
-</script>
 
 {% include 'footer.html' %}
 {% load static %}

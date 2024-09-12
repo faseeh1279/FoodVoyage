@@ -1,5 +1,8 @@
 {% include 'restaurant/layouts/navbar.html' %}
-
+<div class="btn-group text-right" id="toggle_event_editing">
+    <button type="button" class="btn btn-info locked_active" id="btn-turn-off">OFF</button>
+    <button type="button" class="btn btn-default unlocked_inactive" id="btn-turn-on">ON</button>
+</div>
 
 <section class="container">
     
@@ -33,34 +36,23 @@
 
 
     </div>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col ">
-                <div class="card m-2 p-5 shadow">
-                    <h2 class="text-muted">Placed Ordered</h2>
-                    <div class="scrollable-content">
-                        <div class="card p-2 alert alert-primary">
-                            <div class="row">
-                                <div class="col">
-                                    <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg"
-                                        alt="Error Loading Image" style="height:100px; width:100px">
-                                </div>
-                                <div class="col">
-                                    food item name
-                                </div>
-                                <div class="col text-start">
-                                    Rider Name Accepeted the Order. / Order Accedpted!
-                                </div>
-                            </div>
-                        </div>
-                        <ul id="notificationList"></ul>
-                        <!-- Add more card alerts as needed -->
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="container card shadow-lg pt-3">
+        <table class="table">
+            <thead style="background-color: #e42e0c; color:white">
+              <tr>
+                <th scope="col">RiderName</th>
+                <th scope="col">Food Item</th>
+                <th scope="col">Phone Number</th>
+                <th scope="col">Time</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+             
+            </tbody>
+          </table>
+          
+         
     </div>
-    <div class="row">
         <div class="col">
             <div class="card m-2 p-5 shadow" style="height:600px">
                 <h2>Restaurant Location</h2>
@@ -71,3 +63,45 @@
 </section>
  
 {% include 'footer.html' %}
+
+<script>
+    var jsonData; 
+    var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
+    ws.onopen = function(event){
+        console.log("Connected...", event); 
+    };
+    ws.onmessage = function(event){
+        jsonData = JSON.parse(event.data); 
+        console.log(event.data);  
+        if (jsonData.message === "OrderAccepted"){
+            // AJAX to get the credentials 
+            var mydata = {
+                
+            }
+            $.ajax({
+                type:"POST", 
+                url:"", 
+                success:function(data){
+                    console.log(data); 
+                }, 
+                error:function(data){
+                    console.log(data); 
+                }
+            }); 
+            let row = 
+            `
+            <tr>
+            <td>${jsonData.rider}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            </tr>
+            `
+            $("#table-body").append(); 
+
+        }
+    };
+    ws.onerror = function(event){
+        console.log("Disconnected...", event);
+    };
+</script>

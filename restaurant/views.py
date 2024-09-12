@@ -4,6 +4,8 @@ from . import models
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.core import serializers
+import rider.models as rider_models
+import customer.models as customer_models  
 
 
 # Create your views here.
@@ -72,3 +74,14 @@ def delete_item(request, id):
     queryset = models.AddFood.objects.get(id = id)
     queryset.delete() 
     return redirect("/partner-with-us/restaurant/dashboard/addfood/")
+
+@csrf_exempt
+def order_details_credentails(request): 
+    if request.method == "POST": 
+
+        placed_order = customer_models.PlaceOrder.objects.filter()
+
+
+        return JsonResponse(data, safe=False)
+    else: 
+        return JsonResponse({"Error":"Invalid Request!"})
