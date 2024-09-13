@@ -29,3 +29,5 @@ def notification(request):
         "url_name":"notification"
     }
     return render(request, "notification.html", context)
+
+

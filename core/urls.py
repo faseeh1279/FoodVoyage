@@ -24,6 +24,7 @@ urlpatterns = [
     path("partner-with-us/restaurant/", include("restaurant.urls")), 
     path("partner-with-us/rider/", include("rider.urls")),
     path("view-cart/payment/", include("payment.urls")), 
+    
 ]
 
 

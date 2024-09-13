@@ -62,10 +62,22 @@ def dashboard(request):
         return redirect("/partner-with-us/rider/deliver-order-to-customer/")
     else:
         print("Problem#5: No pending orders")
+        rider_dashboard_dictionary = [] 
         rider_dashboard_data = customer_models.ConsumerData.objects.all()
+        for item in rider_dashboard_data: 
+            rider_dashboard_dictionary.append(
+                {
+                'customer_name': item.customer_name.username,  
+                'message': item.message,
+                'time_stamp': item.time_stamp,
+                'customer_id': item.customer_id,
+                'customer_location': item.customer_location,
+                'rider': item.rider,
+                }
+            )
         context = {
             "url_name":"Dashboard",
-            "rider_dashboard_data":rider_dashboard_data
+            "rider_dashboard_data":rider_dashboard_dictionary
         }
         return render(request, "rider/dashboard.html", context)
 
@@ -86,10 +98,19 @@ def deliver_order(request):
 def order_details(request): 
     user = get_user(request) 
     if request.method == "POST": 
-        customer_id = request.POST.get("customer_id")
-        customer_name = request.POST.get("customer_name")
-        order_status = request.POST.get("order_status")
-        rider_name = request.POST.get("rider_name") 
+        data = json.loads(request.body) 
+        # Access the nested data
+        consumer_data = data.get("consumer_data",{})
+        mydata = data.get("mydata",{})
+
+        customer_id = consumer_data.get("customer_id")
+        customer_name = consumer_data.get("customer_name")
+        order_status = consumer_data.get("order_status")
+        rider_name = consumer_data.get("rider_name") 
+        time_stamp = mydata.get("time_stamp")
+        message = mydata.get("message")
+        location = mydata.get("location")
+        
         
         # Use get() to retrieve a single Rider object
         try:
@@ -121,6 +142,25 @@ def get_order_details(request):
             "place_order_data":place_order_data, 
             "restaurant_location":restaurant_location
         }
+        
+        return JsonResponse(data, safe=False)
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
+    
+
+def check_placed_orders(request): 
+    if request.method == "GET": 
+        consumerdata = customer_models.ConsumerData.objects.filter(message = "PlaceOrder")
+        data = [] 
+        for items in consumerdata: 
+            data.append({
+                "customer_id":items.customer_id,
+                "customer_name":items.customer_name.username,
+                "message":items.message, 
+                "time_stamp":items.time_stamp, 
+                "customer_location":items.customer_location, 
+                "rider":items.rider 
+            })
         
         return JsonResponse(data, safe=False)
     else: 

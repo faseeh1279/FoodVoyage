@@ -37,22 +37,7 @@ $(document).ready(function () {
     }); 
 
 
-    // $("#place-order").click(function () {
-        
-    //     // $.ajax({
-    //     //     url: "/get-cart-details/",
-    //     //     type: "GET",
-    //     //     success: function (data) {
-    //     //         data.forEach(items => {
-    //     //             // console.log(`${items.item_name}`); 
-    //     //         });
-    //     //     },
-    //     //     error: function (data) {
-    //     //         // console.log(data); 
-    //     //     }
-    //     // });
-
-    // });
+   
 
 });
 

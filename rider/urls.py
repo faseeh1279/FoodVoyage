@@ -7,4 +7,5 @@ urlpatterns = [
     path("deliver-order-to-customer/", views.deliver_order, name="deliver-order-to-customer"), 
     path("order-details/", views.order_details, name="order-details"), 
     path("get-order-details/", views.get_order_details, name="get-order-details"),
+    path("check-placed-orders/", views.check_placed_orders, name="check-placed-orders"), 
 ]

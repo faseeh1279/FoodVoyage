@@ -34,7 +34,7 @@ function cart_logo_update(){
             $("#cart-number-logo").text(counter); 
         }, 
         error:function(data){
-            // console.log(data); 
+            console.log(data); 
         }
     })
 

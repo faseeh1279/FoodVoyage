@@ -90,8 +90,9 @@ def cart(request):
         user = get_user(request)
         users_cart = models.Users_Cart.objects.get(username=user.username)
         data = list(models.AddToCart.objects.filter(users_cart=users_cart).values())
-        return JsonResponse(data, safe=False)
+        return JsonResponse(data, safe=False)            
     else: 
+        print("Problem # 7") 
         return JsonResponse({"Error":"Invalid Request"})
     
 

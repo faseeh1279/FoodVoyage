@@ -48,9 +48,14 @@
 </section>
 {% for items in rider_dashboard_data %}
     {% if items.rider == "riderName" %}
-        
+        {{items.rider|json_script:"current-rider-name"}}
+        {{items.customer_name|json_script:"customer-name"}}
+        {{items.message|json_script:"message"}}
+        {{items.time_stamp|json_script:"time-stamp"}}
+        {{items.customer_id|json_script:"customer-id"}}
+        {{items.customer_location|json_script:"customer-location"}}
     {% else %}
-    
+        {{items.rider|json_script:"current-rider-name"}}
     {% endif %}
 {% endfor %}
 {% include 'footer.html' %}
@@ -59,6 +64,15 @@
 <script>
     // Ajax Function to get rider name 
     var rider_name; 
+    // var groupName = JSON.parse(document.getElementById('group-name').textContent);
+    var current_rider_name = JSON.parse($("#current-rider-name").text());
+    var customer_name = JSON.parse($("#customer-name").text());
+    var message = JSON.parse($("#message").text());
+    var time_stamp = JSON.parse($("#time-stamp").text());
+    var customer_location = JSON.parse($("#customer-location").text());
+    var customer_id = JSON.parse($("#customer-id").text()); 
+    check_placed_orders();
+
     $.ajax({
         url: "/partner-with-us/rider/get-rider-name/", 
         type:"GET", 
@@ -76,10 +90,10 @@
     var data; 
     ws.onopen = function(event){
         console.log('Connected....',event);
+         
     }
     ws.onmessage = function(event){
         data = JSON.parse(event.data); 
-        //this url is in the btn-accept 
         let row = 
         `
         <tr> 
@@ -87,7 +101,7 @@
             <td>${data.customer_location}</td>
             <td>${data.time_stamp}</td>
             <td> 
-                <button class="btn btn-success" id="btn-accept" data-id="${data.customer_id}"><a href="{% url 'deliver-order-to-customer' %}">Accept </a></button>
+                <button class="btn btn-success" id="btn-accept" data-id="${data.customer_id}"><a href="{% url 'deliver-order-to-customer' %}" style="color:white;">Accept </a></button>
                 <button class="btn btn-danger" id="btn-decline" data-id="${data.customer_id}">Decline</button>
             </td>
 
@@ -121,11 +135,23 @@
             "order_status":"True", 
             "rider_name":rider_name
         }
-        
+        var consumer_data = {
+            "customer_id":data.customer_id, 
+            "customer_name":data.customer_name, 
+            "message":"OrderPlaced", 
+            "time_stamp":data.time_stamp, 
+            "customer_location":data.customer_location, 
+            "rider":data.rider
+        }
+        var dumped_data = {
+            "consumer_data":consumerdata, 
+            "mydata":mydata
+        }
         $.ajax({
             url:"/partner-with-us/rider/order-details/", 
             type:"POST",
-            data: mydata, 
+            contentType: "application/json", // Ensure the server knows we're sending JSON
+            data: JSON.stringify(dumped_data), // Convert the data object to a JSON string
             success:function(event){
                 console.log(event); 
             }, 
@@ -136,5 +162,45 @@
         }); 
         ws.send(JSON.stringify(jsonData)); 
     }); 
+    function check_placed_orders(){
+        $.ajax({
+            url:"/partner-with-us/rider/check-placed-orders/",
+            type:"GET", 
+            success:function(consumerdata){
+                $("#table-body").empty(); 
+                consumerdata.forEach(items => {
+                    if(items.message === "PlaceOrder"){
+                        let row = 
+                            `
+                            <tr> 
+                                <td>${items.customer_name}</td>
+                                <td>${items.customer_location}</td>
+                                <td>${items.time_stamp}</td>
+                                <td> 
+                                    <button class="btn btn-success" id="btn-accept" data-id="${items.customer_id}"><a href="{% url 'deliver-order-to-customer' %}" style="color:white;">Accept </a></button>
+                                    <button class="btn btn-danger" id="btn-decline" data-id="${items.customer_id}">Decline</button>
+                                </td>
 
+                            </tr>
+                            `
+                            $("#table-body").append(row);
+                    }else{
+                        let row = 
+                        `
+                        <tr>
+                            <td colspan="4">No Orders Yet</td>
+                            </tr>
+                        `
+                        $("#table-body").append(row);
+                    }
+                    
+                });
+                
+                
+            }, 
+            error:function(event){
+                console.log(event); 
+            }
+        }); 
+    }
 </script>
