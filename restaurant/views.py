@@ -20,7 +20,8 @@ def home(request):
         restaurant_slogan = request.POST.get('restaurant_slogan')
         phone_number = request.POST.get('phone_number')
         restaurant_image = request.FILES.get('restaurant_image')
-        models.Register_Partner.objects.create(restaurant_name = restaurant_name, restaurant_description = restaurant_description, restaurant_slogan = restaurant_slogan, restaurant_image = restaurant_image, phone_number = phone_number, username = user.username, email = user.email)
+        restaurant_location = request.POST.get('restaurant_location')
+        models.Register_Partner.objects.create(restaurant_name = restaurant_name, restaurant_description = restaurant_description, restaurant_slogan = restaurant_slogan, restaurant_image = restaurant_image, phone_number = phone_number, username = user.username, email = user.email, restaurant_location = restaurant_location)
         return redirect('/partner-with-us/restaurant/dashboard/')
 
     context = {"url_name":"Partner"}

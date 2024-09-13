@@ -11,6 +11,7 @@ class Register_Partner(models.Model):
     email = models.CharField(max_length=50, default="google@example.com")
     username = models.CharField(max_length=50, default="", unique=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
+    restaurant_location = models.CharField(max_length=150, default="restaurant_location")
 
     def __str__(self): 
         return self.restaurant_name  # or self.email

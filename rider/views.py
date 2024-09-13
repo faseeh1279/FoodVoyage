@@ -3,6 +3,9 @@ from . import models
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+import customer.models as customer_models  
+import restaurant.models as restaurant_models 
+import json 
 
 # Create your views here.
 
@@ -101,4 +104,23 @@ def order_details(request):
     else: 
         return JsonResponse({"Error": "Invalid Request"})
 
+@csrf_exempt
+def get_order_details(request): 
+    if request.method == "POST": 
+        customer_name = request.POST.get("customer_name")
+        customer_id = request.POST.get("customer_id")
+        restaurant_name = request.POST.get("restaurant_name")
+        place_order_data = list(customer_models.PlaceOrder.objects.filter(customer_name = customer_name, users_cart_id = customer_id ).values())
+        restaurant_location = restaurant_models.Register_Partner.objects.get(restaurant_name = restaurant_name) 
+
+        data = {
+            "place_order_data":place_order_data, 
+            "restaurant_location":restaurant_location
+        }
+        
+        return JsonResponse(data, safe=False)
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
+
+    
 

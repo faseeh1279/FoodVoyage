@@ -1,5 +1,159 @@
 {% include 'navbar.html' %}
 
-this is deliver order page. 
+<section class="container">
+
+    <div class="card shadow-lg">
+        <div class="container">
+            <!-- Customer Details -->
+            <div class="row">
+                <div class="col-sm p-5 text-center text-white font-weight-bold" style="background-color:#e42e0c;">
+                    <h1 class="text-white font-weight-bold">Customer Name</h1>
+                </div>
+                <div class="col-sm p-5 text-center">
+                    <h1 class="">Muhammad Faseeh Raza Khokhar</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm p-5 text-center">
+                    <h2 class="font-weight-bold">Customer Address</h2>
+                </div>
+                <div class="col-sm p-5 text-center text-white font-weight-bold" style="background-color:#e42e0c;">
+                    <h2 class="text-white" id="customer-location">Raitan Wala Mohallah Street # 1, Model Town
+                        Gujranwala.</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm p-5 text-center" style="background-color:#e42e0c;">
+                    <h2 class="font-weight-bold text-center text-white">Customer Phone</h2>
+                </div>
+                <div class="col-sm p-5 text-center text-white font-weight-bold">
+                    <h2 id="customer-phone">03008475747</h2>
+                </div>
+            </div>
+
+            <hr style="border: 4px solid #e42e0c; " class="mt-4">
+            <!-- Order Details -->
+            <section class="container">
+                <div class="row">
+                    <div class="col-sm" style="background-color: #e42e0c; color:white">
+                        <h3 class="text-center text-white font-weight-bold">Restaurant Name</h2>
+                    </div>
+                    <div class="col-sm">
+                        <h3 class="text-center" id="restaurant-name">Rehans Kitchen</h2>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-sm" style="background-color: #e42e0c; color:white">
+                        <h3 class="text-center text-white font-weight-bold">Restaurant Location</h2>
+                    </div>
+                    <div class="col-sm">
+                        <h3 class="text-center" id="restaurant-location">Model Town Gujranwala.</h2>
+                    </div>
+                </div>
+
+                <table class="table mt-2">
+                    <thead style="background-color: #e42e0c; color:white">
+                        <tr>
+                            <th scope="col" class="text-center">Counter</th>
+                            <th scope="col" class="text-center">Item Qty</th>
+                            <th scope="col" class="text-center">Item Price</th>
+                            <th scope="col" class="text-center">Item Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td class="text-center">1</td>
+                            <td class="text-center">Biryani</td>
+                            <td class="text-center">2</td>
+                            <td class="text-center">540</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">2</td>
+                            <td class="text-center">Biryani</td>
+                            <td class="text-center">2</td>
+                            <td class="text-center">540</td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-center">3</td>
+                            <td class="text-center">Biryani</td>
+                            <td class="text-center">2</td>
+                            <td class="text-center">540</td>
+                        </tr>
+
+                        <tr>
+                            <td class="text-center">4</td>
+                            <td class="text-center">Biryani</td>
+                            <td class="text-center">2</td>
+                            <td class="text-center">540</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3" style="background-color: #e42e0c;">
+                                <h3 class="text-center font-weight-bold text-white">
+                                    TOTAL
+                                </h3>
+                            </td>
+
+                            <td class="text-center font-weight-bold">
+                                <h3 class="text-center font-weight-bold">
+                                    12300 Rs.
+                                </h3>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </section>
+
+
+        </div>
+    </div>
+
+</section>
 
 {% include 'footer.html' %}
+
+
+<script>
+
+    var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
+    var jsonData;
+    
+    ws.onopen = function (event) {
+        console.log("Connected...", event);
+
+    }
+    ws.onmessage = function (event) {
+        jsonData = JSON.parse(event.data);
+        console.log(event.data);
+        var mydata = {
+            "customer_name": jsonData.customer_name, 
+            "customer_id":jsonData.customer_id, 
+            "restaurant_name":jsonData.restaurant_name
+        }
+       
+        $.ajax({
+            url: "/partner-with-us/rider/get-order-details/",
+            type: "POST",
+            data: mydata,
+            success: function (response) {
+                // No need for json parse because jquery already parsed it 
+                let restaurant_location = response.restaurant_location; 
+                let placeOrderData = response.place_order_data;
+                console.log(restaurant_location); 
+                console.log(placeOrderData);  
+
+                
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+    ws.onerror = function (event) {
+        console.log("Disconnected...", event);
+    }
+
+
+</script>

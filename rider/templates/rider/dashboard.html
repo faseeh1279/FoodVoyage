@@ -73,7 +73,7 @@
     }
     ws.onmessage = function(event){
         data = JSON.parse(event.data); 
-        //<a href="{% url 'deliver-order-to-customer' %}"> this url is in the btn-accept 
+        //this url is in the btn-accept 
         let row = 
         `
         <tr> 
@@ -81,7 +81,7 @@
             <td>${data.customer_location}</td>
             <td>${data.time_stamp}</td>
             <td> 
-                <button class="btn btn-success" id="btn-accept" data-id="${data.customer_id}">Accept</a></button>
+                <button class="btn btn-success" id="btn-accept" data-id="${data.customer_id}"><a href="{% url 'deliver-order-to-customer' %}">Accept </a></button>
                 <button class="btn btn-danger" id="btn-decline" data-id="${data.customer_id}">Decline</button>
             </td>
 
