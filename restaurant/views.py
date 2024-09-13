@@ -83,6 +83,6 @@ def order_details_credentails(request):
         placed_order = customer_models.PlaceOrder.objects.filter()
 
 
-        return JsonResponse(data, safe=False)
+        return JsonResponse(placed_order, safe=False)
     else: 
         return JsonResponse({"Error":"Invalid Request!"})

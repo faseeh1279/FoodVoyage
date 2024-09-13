@@ -94,15 +94,6 @@ def cart(request):
     else: 
         return JsonResponse({"Error":"Invalid Request"})
     
-# def place_order(request): 
-#     if request.method == "GET": 
-#         user = get_user(request)
-#         users_cart = models.Users_Cart.objects.get(username=user.username)
-#         data = list(models.AddToCart.objects.filter(users_cart=users_cart).values())
-#         return JsonResponse(data, safe=False)
-#     else: 
-#         return JsonResponse({"Error":"Invalid Request"})
-    
 
 def place_order(request): 
     if request.method == "POST": 
@@ -160,6 +151,28 @@ def place_order_credentials(request):
         users_cart = models.Users_Cart.objects.get(username = user.username)
         data = list(models.PlaceOrder.objects.filter(users_cart = users_cart).values())
         return JsonResponse(data, safe=False)
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
+    
+@csrf_exempt
+def placing_order(request): 
+    if request.method == "POST": 
+        customer_name = request.POST.get("customer_name")
+        message = request.POST.get("message")
+        time_stamp = request.POST.get("time_stamp")
+        customer_id = request.POST.get("customer_id")
+        customer_location = request.POST.get("customer_location")
+        rider = request.POST.get("rider")
+        current_customer = models.Users_Cart.objects.get(username = customer_name)
+        models.ConsumerData.objects.create(
+            customer_name = current_customer, 
+            message = message, 
+            time_stamp = time_stamp, 
+            customer_id = customer_id,
+            customer_location = customer_location,
+            rider = rider
+        )
+        return JsonResponse({"Message":"Data Saved Successfully"})
     else: 
         return JsonResponse({"Error":"Invalid Request"})
 

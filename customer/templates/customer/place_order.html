@@ -73,6 +73,18 @@
                     "rider":"riderName"
                     };
                 });
+                $.ajax({
+                    url:"/placing-order/", 
+                    type:"POST", 
+                    data:jsonData,
+                    success:function(data){
+                        
+                    }, 
+                    error:function(data){
+                        console.log(data); 
+                    }
+
+                }); 
                 ws.send(JSON.stringify(jsonData)); 
                 ws.onclose = function(event){
                     console.log("Disconnected", event); 

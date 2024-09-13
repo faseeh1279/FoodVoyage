@@ -45,7 +45,6 @@ def index(request):
 
 def dashboard(request): 
     user = get_user(request)
-    
     # Get the current rider object
     try:
         current_user = models.Rider.objects.get(name=user.username)
@@ -63,7 +62,12 @@ def dashboard(request):
         return redirect("/partner-with-us/rider/deliver-order-to-customer/")
     else:
         print("Problem#5: No pending orders")
-        return render(request, "rider/dashboard.html")
+        rider_dashboard_data = customer_models.ConsumerData.objects.all()
+        context = {
+            "url_name":"Dashboard",
+            "rider_dashboard_data":rider_dashboard_data
+        }
+        return render(request, "rider/dashboard.html", context)
 
 
 def rider_name(request): 

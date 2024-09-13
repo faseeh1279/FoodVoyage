@@ -46,7 +46,13 @@
          
     </div>
 </section>
-
+{% for items in rider_dashboard_data %}
+    {% if items.rider == "riderName" %}
+        
+    {% else %}
+    
+    {% endif %}
+{% endfor %}
 {% include 'footer.html' %}
 
 
