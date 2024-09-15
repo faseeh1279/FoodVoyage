@@ -48,20 +48,20 @@ def dashboard(request):
     # Get the current rider object
     try:
         current_user = models.Rider.objects.get(name=user.username)
-        print("Problem#1: Rider found")
+        
     except models.Rider.DoesNotExist:
-        print("Problem#1: Rider not found")
+        
         return redirect("/some-error-page/")  # Redirect or handle the case when rider is not found
 
     # Filter all pending orders for the current rider
     pending_orders = models.OrderDetails.objects.filter(rider=current_user, order_status=False)
     
     if pending_orders.exists(): 
-        print("Problem#2: Pending order found")
+        
         # If there's at least one pending order, you can redirect to the delivery page
         return redirect("/partner-with-us/rider/deliver-order-to-customer/")
     else:
-        print("Problem#5: No pending orders")
+        
         rider_dashboard_dictionary = [] 
         rider_dashboard_data = customer_models.ConsumerData.objects.all()
         for item in rider_dashboard_data: 
@@ -85,46 +85,54 @@ def dashboard(request):
 def rider_name(request): 
     if request.method == "GET": 
         user = get_user(request)
-        data = list(models.Rider.objects.filter(name = user.username).values())
-        return JsonResponse(data,safe=False )
+        print(user.username)
+        current_rider_name = models.Rider.objects.get(name = user.username)
+        print("Object Caught successfully", current_rider_name.name) 
+        data = current_rider_name.name 
+        return JsonResponse(data, safe=False)
+
     else: 
         return JsonResponse({"Error":"Invalid Request"})
 
 
 def deliver_order(request): 
+    
     return render(request, "rider/deliver_order.html")
 
 @csrf_exempt
 def order_details(request): 
     user = get_user(request) 
     if request.method == "POST": 
-        data = json.loads(request.body) 
-        # Access the nested data
-        consumer_data = data.get("consumer_data",{})
-        mydata = data.get("mydata",{})
+        
 
-        customer_id = consumer_data.get("customer_id")
-        customer_name = consumer_data.get("customer_name")
-        order_status = consumer_data.get("order_status")
-        rider_name = consumer_data.get("rider_name") 
-        time_stamp = mydata.get("time_stamp")
-        message = mydata.get("message")
-        location = mydata.get("location")
+        customer_id = request.POST.get("customer_id")
+        customer_name = request.POST.get("customer_name")
+        order_status = request.POST.get("order_status")
+        rider_name = request.POST.get("rider_name") 
+        time_stamp = request.POST.get("time_stamp")
+        message = request.POST.get("message")
+        location = request.POST.get("location")
         
         
-        # Use get() to retrieve a single Rider object
+        
         try:
             current_user = models.Rider.objects.get(name=user.username)
         except models.Rider.DoesNotExist:
             return JsonResponse({"Error": "Rider not found"}, status=404)
         
         models.OrderDetails.objects.create(
-            rider=current_user,  # Correct assignment of the rider ForeignKey
+            rider=current_user,  
             customer_id=customer_id, 
             customer_name=customer_name, 
             order_status=order_status,
             rider_name=rider_name 
         )
+        data = customer_models.ConsumerData.objects.filter(customer_id = customer_id)
+        for items in data:
+            items.message = message
+            items.customer_location = location 
+            items.time_stamp = time_stamp
+            items.save() 
         return JsonResponse({"Success": "Order Details Added Successfully"})
     else: 
         return JsonResponse({"Error": "Invalid Request"})
@@ -165,6 +173,20 @@ def check_placed_orders(request):
         return JsonResponse(data, safe=False)
     else: 
         return JsonResponse({"Error":"Invalid Request"})
+    
+
+def get_placed_orders_details(request): 
+    if request.method == "GET":
+        user = get_user(request)
+        rider_name = models.Rider.objects.get(name = user.username)
+        data = list(customer_models.ConsumerData.objects.filter(rider = rider_name).values())
+        return JsonResponse(data, safe=False)
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
+    
+
+
+
 
     
 

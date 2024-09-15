@@ -5,6 +5,7 @@
     <div class="card shadow-lg">
         <div class="container">
             <!-- Customer Details -->
+             
             <div class="row">
                 <div class="col-sm p-5 text-center text-white font-weight-bold" style="background-color:#e42e0c;">
                     <h1 class="text-white font-weight-bold">Customer Name</h1>
@@ -117,43 +118,16 @@
 
 <script>
 
-    var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
-    var jsonData;
-    
-    ws.onopen = function (event) {
-        console.log("Connected...", event);
-
-    }
-    ws.onmessage = function (event) {
-        jsonData = JSON.parse(event.data);
-        console.log(event.data);
-        var mydata = {
-            "customer_name": jsonData.customer_name, 
-            "customer_id":jsonData.customer_id, 
-            "restaurant_name":jsonData.restaurant_name
+    $.ajax({
+        url:"/partner-with-us/rider/get-placed-order-details/",
+        type:"GET",
+        success:function(data){
+            console.log(data);
+        }, 
+        error:function(data){
+            console.log(data); 
         }
-       
-        $.ajax({
-            url: "/partner-with-us/rider/get-order-details/",
-            type: "POST",
-            data: mydata,
-            success: function (response) {
-                // No need for json parse because jquery already parsed it 
-                let restaurant_location = response.restaurant_location; 
-                let placeOrderData = response.place_order_data;
-                console.log(restaurant_location); 
-                console.log(placeOrderData);  
 
-                
-            },
-            error: function (data) {
-
-            }
-        });
-    }
-    ws.onerror = function (event) {
-        console.log("Disconnected...", event);
-    }
-
+    }); 
 
 </script>
