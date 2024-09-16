@@ -100,13 +100,17 @@ def place_order(request):
     if request.method == "POST": 
         user = get_user(request) 
         users_cart = models.Users_Cart.objects.get(username=user.username)
-
-        # Update location and phone number
-        customer_phone_number = request.POST.get("phone_number")
-        customer_location = request.POST.get("customer_location")
-        users_cart.location = customer_location
-        users_cart.phone_number = customer_phone_number
-        users_cart.save()
+        if users_cart.phone_number == "0300*******": 
+            # Update location and phone number
+            customer_phone_number = request.POST.get("phone_number")
+            customer_location = request.POST.get("customer_location")
+            users_cart.location = customer_location
+            users_cart.phone_number = customer_phone_number
+            users_cart.save()
+        else: 
+            customer_location = request.POST.get("customer_location")
+            users_cart.location = customer_location 
+            users_cart.save()
 
         # Get the items in the cart
         cart_items = models.AddToCart.objects.filter(users_cart=users_cart)

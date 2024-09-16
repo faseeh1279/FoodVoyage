@@ -44,3 +44,4 @@ class ConsumerData(models.Model):
     customer_id = models.CharField(max_length=155)
     customer_location = models.CharField(max_length=255)
     rider = models.CharField(max_length=155)
+    
