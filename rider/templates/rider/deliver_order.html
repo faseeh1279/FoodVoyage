@@ -116,17 +116,24 @@
 
 
 <script>
-
-    $.ajax({
+    $(document).ready(function(){
+        console.log("Everything working properly"); 
+        get_data(); 
+    }); 
+    function get_data(){
+        $.ajax({
         url:"/partner-with-us/rider/get-placed-order-details/",
         type:"GET",
-        success:function(data){
-            console.log(data);
-        }, 
-        error:function(data){
-            console.log(data); 
-        }
+        success:get_order_details, 
+        error:get_order_failed,
 
     }); 
-
+    }
+    function get_order_failed(datafromserver){
+        console.log(datafromserver);
+    }
+    function get_order_details(datafromserver){
+        let parsed_data = JSON.parse(data);  
+        console.log(parsed_data);
+    }
 </script>

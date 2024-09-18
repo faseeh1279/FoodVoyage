@@ -13,4 +13,6 @@ urlpatterns = [
     # Get customer Phone Number ONLY
     path("get-customer-phoneNumber/", views.get_customer_phoneNumber, name="get-customer-phoneNumber"), 
     path("get-orders-from-database/", views.get_orders, name="get-orders-from-database"), 
+    path("get-rider-name/", views.get_rider_name, name="get-rider-name"), 
+    path("upload-consumer-data/", views.upload_consumer_data, name="upload_consumer_data"), 
     ]

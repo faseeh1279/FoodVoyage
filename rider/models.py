@@ -21,6 +21,7 @@ class OrderDetails(models.Model):
     customer_name = models.CharField(max_length=100)
     order_status = models.BooleanField(default=False) # False means that order is pending and True means that order has been delivered. 
     rider_name = models.CharField(max_length=100, default="rider_name")
+    
 
 
 

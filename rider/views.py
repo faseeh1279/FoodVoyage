@@ -46,8 +46,13 @@ def index(request):
 
 
 def deliver_order(request): 
+     
     
-    return render(request, "rider/deliver_order.html")
+    context = {
+        "url_name":"DeliverOrder", 
+        
+    }
+    return render(request, "rider/deliver_order.html", context)
 
 @csrf_exempt
 def get_order_details(request): 
@@ -71,7 +76,21 @@ def get_placed_orders_details(request):
     if request.method == "GET":
         user = get_user(request)
         rider_name = models.Rider.objects.get(name = user.username)
-        data = list(customer_models.ConsumerData.objects.filter(rider = rider_name).values())
+        consumer_model = customer_models.ConsumerData.objects.filter(rider = rider_name.name)
+        
+        restaurant_data = restaurant_models.Register_Partner.objects.all() 
+        
+        restaurant_food_items = restaurant_models.AddFood.objects.all() 
+        
+        customer_place_order = customer_models.PlaceOrder.objects.all() 
+        
+        data = {
+            "consumer_model":consumer_model,
+            "restaurant_data":restaurant_data, 
+            "restaurant_food_items":restaurant_food_items, 
+            "customer_place_order":customer_place_order
+        }
+
         return JsonResponse(data, safe=False)
     else: 
         return JsonResponse({"Error":"Invalid Request"})
@@ -79,9 +98,13 @@ def get_placed_orders_details(request):
 
 
 def dashboard(request): 
+    user = get_user(request)
+    queryset = models.Rider.objects.get(name = user.username)
     context = {
-        "url_name":"Dashboard"
+        "url_name":"Dashboard", 
+        "queryset":queryset.name
     }
+     
     return render(request, "rider/dashboard.html", context)
 
 @csrf_exempt
@@ -106,6 +129,37 @@ def get_orders(request):
         return JsonResponse(json.dumps(dictionary), safe=False)
     else: 
         return JsonResponse({"Error":"Invalid Request"})
+    
+
+def get_rider_name(request): 
+    if request.method == "GET":
+        user = get_user(request)
+        rider_name = models.Rider.objects.get(name = user.username)
+        return JsonResponse(rider_name.name, safe=False)
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
+    
+
+
+@csrf_exempt
+def upload_consumer_data(request):
+    if request.method == "POST":
+        rider = request.POST.get("rider")
+        customer_id = request.POST.get("customer_id")
+        CUSTOMER_ID = customer_id 
+        queryset = customer_models.ConsumerData.objects.filter(customer_id = customer_id)
+        for items in queryset: 
+            items.rider = rider
+            items.save() 
+        return JsonResponse({"Message":"Data Saved Successfully"})
+    else: 
+        return JsonResponse({"Message":"Invalid Request"})
+
+        
+
+        
+
+
 
 
 

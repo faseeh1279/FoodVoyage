@@ -72,7 +72,7 @@
     };
     ws.onmessage = function(event){
         jsonData = JSON.parse(event.data); 
-        console.log(event.data);  
+        console.log(jsonData);  
         if (jsonData.message === "OrderAccepted"){
             // AJAX to get the credentials 
             var mydata = {

@@ -44,4 +44,6 @@ class ConsumerData(models.Model):
     customer_id = models.CharField(max_length=155)
     customer_location = models.CharField(max_length=255)
     rider = models.CharField(max_length=155)
+    def __str__(self): 
+        return f"{self.customer_name} {self.message} at {self.customer_location} by {self.rider}"
     

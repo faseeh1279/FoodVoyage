@@ -42,22 +42,13 @@
 
             </tbody>
         </table>
+        
 
 
     </div>
 </section>
-<!-- {% for items in rider_dashboard_data %}
-    {% if items.rider == "riderName" %}
-        {{items.rider|json_script:"current-rider-name"}}
-        {{items.customer_name|json_script:"customer-name"}}
-        {{items.message|json_script:"message"}}
-        {{items.time_stamp|json_script:"time-stamp"}}
-        {{items.customer_id|json_script:"customer-id"}}
-        {{items.customer_location|json_script:"customer-location"}}
-    {% else %}
-        {{items.rider|json_script:"current-rider-name"}}
-    {% endif %}
-{% endfor %} -->
+
+{{ queryset|json_script:"current-rider-name" }}
 {% include 'footer.html' %}
 
 
@@ -73,10 +64,14 @@
     var rider;
     var time_stamp;
     var customer_PhoneNumber;
+    var newdata = {};
+    var array = []
+    var upload_consumer_data; 
+    var current_rider_name = JSON.parse($("#current-rider-name").html()); 
+    // WebSocket Connection 
+    var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
     $(document).ready(function () {
 
-        // WebSocket Connection 
-        var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
         var data;
         ws.onopen = function (event) {
             console.log("Connected...", event);
@@ -85,6 +80,7 @@
         ws.onmessage = function (event) {
             console.log("Message Received", event);
             data = JSON.parse(event.data);
+            console.log(data); 
             get_data(data);
         }
 
@@ -96,9 +92,52 @@
             console.error("WebSocket Error:", event);
         }
         get_data();
+        $(this).on("click", "#btn-accept", function () {
+            let itemId = $(this).data('id');
+            
+             
+            for (let i = 0; i < array.length; i++) {
+                let items = array[i];
+                if (itemId === items.customer_id) {
+                    jsonData = {
+                        "customer_name": items.customer_name, // corrected typo from cuatomer_name to customer_name
+                        "message": "OrderAccepted",
+                        "time_stamp": items.time_stamp,
+                        "customer_id": items.customer_id,
+                        "customer_location": items.customer_location,
+                        "rider": current_rider_name,
+                    };
+                    
+                    send_data_to_consumerModel(jsonData);
+                    ws.send(JSON.stringify(jsonData));
+                    break; // Exits the loop immediately
+                }
+            }
 
+
+
+        });
+        $(this).on("click", "#btn-decline", function () {
+            let itemId = $(this).data("id");
+            $(this).closest('tr').remove();
+
+        });
     });
-
+    function send_data_to_consumerModel(upload_consumer_data){
+        $.ajax({
+            url:"/partner-with-us/rider/upload-consumer-data/", 
+            type:"POST", 
+            data:upload_consumer_data, 
+            success: data_upload_successful, 
+            error: data_upload_error
+        }); 
+    }
+    function data_upload_successful(data){
+        console.log(data); 
+    }
+    function data_upload_error(data){
+        console.log(data); 
+    }
 
     function get_data(data) {
         if ($.isEmptyObject(data)) {
@@ -120,49 +159,46 @@
 
     function datafetched(response) {
         let dictionary = JSON.parse(response);
-        let consumer_data = dictionary.consumer_data; 
-        let users_cart = dictionary.users_cart; 
-        let newdata = {}
-        let array = [] 
-       
-        console.log(consumer_data); 
-        console.log(users_cart); 
+        let consumer_data = dictionary.consumer_data;
+        let users_cart = dictionary.users_cart;
+
+
         consumer_data.forEach(items => {
-           users_cart.forEach(inner_items=>{
+            users_cart.forEach(inner_items => {
 
-            if(items.customer_name_id === inner_items.id){
-                let c_name = inner_items.username; 
-                let c_phone = inner_items.phone_number;
-                let c_location = items.customer_location; 
-                let c_time_stamp = items.time_stamp;
-                let c_rider = items.rider;
-                let c_message = items.message;
-                let c_id = inner_items.id;  
-                newdata = {
-                    "customer_name":c_name, 
-                    "customer_location":c_location, 
-                    "customer_phone":c_phone, 
-                    "time_stamp":c_time_stamp, 
-                    "rider":c_rider, 
-                    "message":c_message 
+                if (items.customer_name_id === inner_items.id) {
+                    let c_name = inner_items.username;
+                    let c_phone = inner_items.phone_number;
+                    let c_location = items.customer_location;
+                    let c_time_stamp = items.time_stamp;
+                    let c_rider = items.rider;
+                    let c_message = items.message;
+                    let c_id = inner_items.id;
+                    newdata = {
+                        "customer_id": c_id,
+                        "customer_name": c_name,
+                        "customer_location": c_location,
+                        "customer_phone": c_phone,
+                        "time_stamp": c_time_stamp,
+                        "rider": c_rider,
+                        "message": c_message
+                    }
+                    array.push(newdata);
                 }
-                array.push(newdata); 
-                
-            }
 
-           });      
+            });
         });
-        console.log(array); 
+
         array.forEach(items => {
             let row =
-            `
+                `
             <tr>
                 <td>${items.customer_name}</td>
                 <td>${items.customer_location}</td>
                 <td>${items.customer_phone}</td>
                 <td>
-                    <button class="btn btn-success" data-id="${items.customer_id}">Accept</button>
-                    <button class="btn btn-danger" data-id="${items.customer_id}">Decline</button>
+                    <button class="btn btn-success" id="btn-accept" data-id="${items.customer_id}"><a href="#" style="color:white;">Accept</a></button>
+                    <button class="btn btn-danger" id="btn-decline" data-id="${items.customer_id}">Decline</button>
                 </td>
             </tr>
             `
@@ -184,7 +220,7 @@
     }
 
     function populate_table() {
-        tableBody.empty();
+
         mydata = {
             customer_name: customer_name
         }
@@ -196,7 +232,7 @@
 
     // Getting Customer Phone Number 
     function getting_customer_PhoneNumberSuccessfully(data) {
-        customer_PhoneNumber = data
+        customer_PhoneNumber = data;
         console.log("Customer Phone Number : ", customer_PhoneNumber);
         let row =
             `
@@ -205,8 +241,8 @@
             <td>${customer_location}</td>
             <td>${customer_PhoneNumber}</td>
             <td>
-                <button class="btn btn-success" data-id="${customer_id}">Accept</button>
-                <button class="btn btn-danger" data-id="${customer_id}">Decline</button>
+                <button class="btn btn-success" id="btn-accept" data-id="${customer_id}"><a href="#" style="color:white;">Accept</a></button>
+                <button class="btn btn-danger" id="btn-decline" data-id="${customer_id}">Decline</button>
             </td>
         </tr>
         `
@@ -228,3 +264,6 @@
         });
     }
 </script>
+
+
+<!-- {% url 'deliver-order-to-customer' %} -->
