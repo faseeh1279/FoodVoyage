@@ -46,10 +46,24 @@ def index(request):
 
 
 def deliver_order(request): 
-     
+    current_rider_name = get_user(request)
+    queryset = customer_models.ConsumerData.objects.filter(rider = current_rider_name.username)
+    for items in queryset: 
+        customer_name = items.customer_name
+        customer_location = items.customer_location
+    data = customer_models.Users_Cart.objects.filter(username = customer_name)
+    for items in data: 
+        customer_phone = items.phone_number
+    restaurant_items = list(customer_models.PlaceOrder.objects.filter(customer_name = customer_name).values())
     
     context = {
         "url_name":"DeliverOrder", 
+        "consumer_data":queryset, 
+        "customer_name":customer_name,
+        "customer_location":customer_location, 
+        "customer_phone":customer_phone, 
+        "restaurant_items":restaurant_items 
+
         
     }
     return render(request, "rider/deliver_order.html", context)
@@ -72,28 +86,6 @@ def get_order_details(request):
     else: 
         return JsonResponse({"Error":"Invalid Request"})
 
-def get_placed_orders_details(request): 
-    if request.method == "GET":
-        user = get_user(request)
-        rider_name = models.Rider.objects.get(name = user.username)
-        consumer_model = customer_models.ConsumerData.objects.filter(rider = rider_name.name)
-        
-        restaurant_data = restaurant_models.Register_Partner.objects.all() 
-        
-        restaurant_food_items = restaurant_models.AddFood.objects.all() 
-        
-        customer_place_order = customer_models.PlaceOrder.objects.all() 
-        
-        data = {
-            "consumer_model":consumer_model,
-            "restaurant_data":restaurant_data, 
-            "restaurant_food_items":restaurant_food_items, 
-            "customer_place_order":customer_place_order
-        }
-
-        return JsonResponse(data, safe=False)
-    else: 
-        return JsonResponse({"Error":"Invalid Request"})
     
 
 

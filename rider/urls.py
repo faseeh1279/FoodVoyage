@@ -8,7 +8,7 @@ urlpatterns = [
     
     path("get-order-details/", views.get_order_details, name="get-order-details"),
     
-    path("get-placed-order-details/", views.get_placed_orders_details, name="get-placed-order-details"),
+    
     
     # Get customer Phone Number ONLY
     path("get-customer-phoneNumber/", views.get_customer_phoneNumber, name="get-customer-phoneNumber"), 

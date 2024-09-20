@@ -1,16 +1,15 @@
 {% include 'navbar.html' %}
 
 <section class="container">
-
+{{restaurant_items|json_script:"restaurant-items"}}
     <div class="card shadow-lg">
         <div class="container">
-            <!-- Customer Details -->
             <div class="row">
                 <div class="col-sm p-5 text-center text-white font-weight-bold" style="background-color:#e42e0c;">
                     <h1 class="text-white font-weight-bold">Customer Name</h1>
                 </div>
                 <div class="col-sm p-5 text-center">
-                    <h1 class="">Muhammad Faseeh Raza Khokhar</h1>
+                    <h1 class="">{{customer_name}}</h1>
                 </div>
             </div>
             <div class="row">
@@ -18,8 +17,7 @@
                     <h2 class="font-weight-bold">Customer Address</h2>
                 </div>
                 <div class="col-sm p-5 text-center text-white font-weight-bold" style="background-color:#e42e0c;">
-                    <h2 class="text-white" id="customer-location">Raitan Wala Mohallah Street # 1, Model Town
-                        Gujranwala.</h2>
+                    <h2 class="text-white" id="customer-location">{{customer_location}}</h2>
                 </div>
             </div>
             <div class="row">
@@ -27,87 +25,37 @@
                     <h2 class="font-weight-bold text-center text-white">Customer Phone</h2>
                 </div>
                 <div class="col-sm p-5 text-center text-white font-weight-bold">
-                    <h2 id="customer-phone">03008475747</h2>
+                    <h2 id="customer-phone">{{customer_phone}}</h2>
                 </div>
             </div>
 
             <hr style="border: 4px solid #e42e0c; " class="mt-4">
             <!-- Order Details -->
             <section class="container">
-                <div class="row">
-                    <div class="col-sm" style="background-color: #e42e0c; color:white">
-                        <h3 class="text-center text-white font-weight-bold">Restaurant Name</h2>
-                    </div>
-                    <div class="col-sm">
-                        <h3 class="text-center" id="restaurant-name">Rehans Kitchen</h2>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-sm" style="background-color: #e42e0c; color:white">
-                        <h3 class="text-center text-white font-weight-bold">Restaurant Location</h2>
-                    </div>
-                    <div class="col-sm">
-                        <h3 class="text-center" id="restaurant-location">Model Town Gujranwala.</h2>
-                    </div>
+                <div id="restaurant-credentials">
+                    
                 </div>
 
                 <table class="table mt-2">
                     <thead style="background-color: #e42e0c; color:white">
                         <tr>
-                            <th scope="col" class="text-center">Counter</th>
-                            <th scope="col" class="text-center">Item Qty</th>
-                            <th scope="col" class="text-center">Item Price</th>
+                            <th scope="col" class="">Counter</th>
+                            <th scope="col" class="">Item Name</th>
                             <th scope="col" class="text-center">Item Price</th>
                         </tr>
                     </thead>
                     <tbody id="table-body">
-                        <tr>
-                            <td class="text-center">1</td>
-                            <td class="text-center">Biryani</td>
-                            <td class="text-center">2</td>
-                            <td class="text-center">540</td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">2</td>
-                            <td class="text-center">Biryani</td>
-                            <td class="text-center">2</td>
-                            <td class="text-center">540</td>
-                        </tr>
-
-                        <tr>
-                            <td class="text-center">3</td>
-                            <td class="text-center">Biryani</td>
-                            <td class="text-center">2</td>
-                            <td class="text-center">540</td>
-                        </tr>
-
-                        <tr>
-                            <td class="text-center">4</td>
-                            <td class="text-center">Biryani</td>
-                            <td class="text-center">2</td>
-                            <td class="text-center">540</td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="3" style="background-color: #e42e0c;">
-                                <h3 class="text-center font-weight-bold text-white">
-                                    TOTAL
-                                </h3>
-                            </td>
-
-                            <td class="text-center font-weight-bold">
-                                <h3 class="text-center font-weight-bold">
-                                    12300 Rs.
-                                </h3>
-                            </td>
-                        </tr>
-
+                        
+                        
                     </tbody>
                 </table>
             </section>
 
 
         </div>
+        
+            <button class="btn btn-primary m-5">DONE</button>
+        
     </div>
 
 </section>
@@ -118,22 +66,80 @@
 <script>
     $(document).ready(function(){
         console.log("Everything working properly"); 
-        get_data(); 
-    }); 
-    function get_data(){
-        $.ajax({
-        url:"/partner-with-us/rider/get-placed-order-details/",
-        type:"GET",
-        success:get_order_details, 
-        error:get_order_failed,
+        var restaurant_names = []; 
+        let restaurant_items = $("#restaurant-items").html(); 
+        let parsedData = JSON.parse(restaurant_items); 
+        let counter = 1; 
+        let tablebody = $("#table-body"); 
+        var grand_total = 0; 
+        parsedData.forEach(items=>{
+            if(!restaurant_names.includes(items.restaurant_name)){
+                restaurant_names.push(items.restaurant_name); 
+            }
 
+        }); 
+        console.log(restaurant_names); 
+        parsedData.forEach(items => {
+            restaurant_names.forEach(newitems=>{
+                if(items.restaurant_names === newitems){
+                    let credentials = 
+                    `
+                    <div class="row">
+                        <div class="col-sm" style="background-color: #e42e0c; color:white">
+                            <h3 class="text-center text-white font-weight-bold">Restaurant Name</h2>
+                        </div>
+                        <div class="col-sm">
+                            <h3 class="text-center" id="restaurant-name">${items.restaurant_names}</h2>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm" style="background-color: #e42e0c; color:white">
+                            <h3 class="text-center text-white font-weight-bold">Restaurant Location</h2>
+                        </div>
+                        <div class="col-sm">
+                            <h3 class="text-center" id="restaurant-location">${items.restaurnat_location}</h2>
+                        </div>
+                    </div>`
+                    let row = 
+                    `
+                    <tr>
+                    <td class="">${counter}</td>
+                    <td class="">${items.item_name}</td>
+                    <td class="text-center">${items.item_price}</td>
+                    </tr>
+                    `
+                }
+            }); 
+            let row = 
+            `
+            <tr>
+            <td class="">${counter}</td>
+            <td class="">${items.item_name}</td>
+            <td class="text-center">${items.item_price}</td>
+            </tr>
+            `
+            tablebody.append(row); 
+            counter++; 
+            grand_total += parseInt(items.item_price);
+            
+        });
+        let row = `
+        <tr>
+            <td colspan="2" style="background-color: #e42e0c;">
+                <h3 class="text-center font-weight-bold text-white">
+                    TOTAL
+                </h3>
+            </td>
+
+            <td class="text-center font-weight-bold">
+                <h3 class="text-center font-weight-bold">
+                    ${grand_total}
+                </h3>
+            </td>
+        </tr>
+        `
+        tablebody.append(row);
+        
     }); 
-    }
-    function get_order_failed(datafromserver){
-        console.log(datafromserver);
-    }
-    function get_order_details(datafromserver){
-        let parsed_data = JSON.parse(data);  
-        console.log(parsed_data);
-    }
+    
 </script>
