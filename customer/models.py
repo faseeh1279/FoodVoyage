@@ -34,7 +34,7 @@ class PlaceOrder(models.Model):
     customer_location = models.CharField(max_length=300)
     current_datetime = models.CharField(max_length=100, default="datetime")
     def __str__(self): 
-        return f"{self.customer_name} ordered at location {self.customer_location} for amount {self.total_amount}"
+        return f"{self.customer_name} ordered at location {self.customer_location} for amount {self.total_amount} Order Status : {self.order_status}"
 
 
 class ConsumerData(models.Model): 
@@ -46,4 +46,6 @@ class ConsumerData(models.Model):
     rider = models.CharField(max_length=155)
     def __str__(self): 
         return f"{self.customer_name} {self.message} at {self.customer_location} by {self.rider}"
+
+
     

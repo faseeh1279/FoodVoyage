@@ -2,6 +2,7 @@
 
 <section class="container">
 {{restaurant_items|json_script:"restaurant-items"}}
+
     <div class="card shadow-lg">
         <div class="container">
             <div class="row">
@@ -9,7 +10,7 @@
                     <h1 class="text-white font-weight-bold">Customer Name</h1>
                 </div>
                 <div class="col-sm p-5 text-center">
-                    <h1 class="">{{customer_name}}</h1>
+                    <h1 class="" id="customer-name">{{customer_name}}</h1>
                 </div>
             </div>
             <div class="row">
@@ -54,7 +55,7 @@
 
         </div>
         
-            <button class="btn btn-primary m-5">DONE</button>
+            <button class="btn btn-primary m-5" id="order-delivered" style="background-color:#e42e0c;"><a href="{% url 'rider-dashboard' %}" style=" color:white;">CONFIRMED</a></button>
         
     </div>
 
@@ -66,12 +67,12 @@
 <script>
     $(document).ready(function(){
         console.log("Everything working properly"); 
+        var grand_total = 0; 
         var restaurant_names = []; 
         let restaurant_items = $("#restaurant-items").html(); 
         let parsedData = JSON.parse(restaurant_items); 
         let counter = 1; 
         let tablebody = $("#table-body"); 
-        var grand_total = 0; 
         parsedData.forEach(items=>{
             if(!restaurant_names.includes(items.restaurant_name)){
                 restaurant_names.push(items.restaurant_name); 
@@ -140,6 +141,31 @@
         `
         tablebody.append(row);
         
+        $("#order-delivered").click(function(){
+            save_data(grand_total); 
+        }); 
     }); 
+    function save_data(grand_total){
+        let gst_total = grand_total; 
+        var current_customer_name = $("#customer-name").text(); 
+        console.log("Customer Name : ", current_customer_name); 
+        console.log("Grand Total : ", gst_total); 
+        $.ajax({
+            url:"/partner-with-us/rider/upload-deliveredorder-data/", 
+            type:"POST", 
+            data:{
+                "grand_total":gst_total, 
+                "customer_name":current_customer_name,
+            }, 
+            success:delivered_data_saved_successfull, 
+            error:delivered_data_error
+        }); 
+    }
+    function delivered_data_saved_successfull(){
+        console.log("data saved successfully");
+    }
+    function delivered_data_error(){
+        console.log("data error"); 
+    }
     
 </script>

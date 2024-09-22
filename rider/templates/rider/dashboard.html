@@ -70,9 +70,9 @@
     var current_rider_name = JSON.parse($("#current-rider-name").html()); 
     // WebSocket Connection 
     var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
+    var data;
     $(document).ready(function () {
 
-        var data;
         ws.onopen = function (event) {
             console.log("Connected...", event);
         }
@@ -94,13 +94,11 @@
         get_data();
         $(this).on("click", "#btn-accept", function () {
             let itemId = $(this).data('id');
-            
-             
             for (let i = 0; i < array.length; i++) {
                 let items = array[i];
                 if (itemId === items.customer_id) {
                     jsonData = {
-                        "customer_name": items.customer_name, // corrected typo from cuatomer_name to customer_name
+                        "customer_name": items.customer_name,
                         "message": "OrderAccepted",
                         "time_stamp": items.time_stamp,
                         "customer_id": items.customer_id,
@@ -109,20 +107,21 @@
                     };
                     
                     send_data_to_consumerModel(jsonData);
+                    console.log(jsonData);
                     ws.send(JSON.stringify(jsonData));
                     break; // Exits the loop immediately
                 }
             }
-
-
-
         });
+        
         $(this).on("click", "#btn-decline", function () {
             let itemId = $(this).data("id");
             $(this).closest('tr').remove();
 
         });
+
     });
+
     function send_data_to_consumerModel(upload_consumer_data){
         $.ajax({
             url:"/partner-with-us/rider/upload-consumer-data/", 
@@ -132,9 +131,11 @@
             error: data_upload_error
         }); 
     }
+
     function data_upload_successful(data){
         console.log(data); 
     }
+
     function data_upload_error(data){
         console.log(data); 
     }
@@ -197,7 +198,7 @@
                 <td>${items.customer_location}</td>
                 <td>${items.customer_phone}</td>
                 <td>
-                    <button class="btn btn-success" id="btn-accept" data-id="${items.customer_id}"><a href="#" style="color:white;">Accept</a></button>
+                    <button class="btn btn-success" id="btn-accept" data-id="${items.customer_id}"><a href="{% url 'deliver-order-to-customer' %}" style="color:white;">Accept</a></button>
                     <button class="btn btn-danger" id="btn-decline" data-id="${items.customer_id}">Decline</button>
                 </td>
             </tr>
@@ -241,7 +242,7 @@
             <td>${customer_location}</td>
             <td>${customer_PhoneNumber}</td>
             <td>
-                <button class="btn btn-success" id="btn-accept" data-id="${customer_id}"><a href="#" style="color:white;">Accept</a></button>
+                <button class="btn btn-success" id="btn-accept" data-id="${customer_id}"><a href="{% url 'deliver-order-to-customer' %}" style="color:white;">Accept</a></button>
                 <button class="btn btn-danger" id="btn-decline" data-id="${customer_id}">Decline</button>
             </td>
         </tr>

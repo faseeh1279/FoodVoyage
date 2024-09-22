@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.core import serializers
 import rider.models as rider_models
 import customer.models as customer_models  
+import json 
 
 
 # Create your views here.
@@ -79,10 +80,31 @@ def delete_item(request, id):
 @csrf_exempt
 def order_details_credentails(request): 
     if request.method == "POST": 
-
         placed_order = customer_models.PlaceOrder.objects.filter()
-
-
         return JsonResponse(placed_order, safe=False)
     else: 
         return JsonResponse({"Error":"Invalid Request!"})
+
+
+@csrf_exempt
+def populate_dashboard(request):
+    if request.method == "POST": 
+        customer_name = request.POST.get("customer_name") 
+        time_stamp = request.POST.get("time_stamp")
+        customer_id = request.POST.get("customer_id")
+        customer_location = request.POST.get("customer_location")
+        rider_name = request.POST.get("rider_name")
+        queryset = customer_models.PlaceOrder.objects.filter(customer_name = customer_name, users_cart = customer_id)
+
+        for items in queryset: 
+            users_cart = customer_models.Users_Cart.objects.filter(username = items.users_cart)
+
+       
+        data = {
+            "queryset":list(queryset.values()), 
+            "users_cart":list(users_cart.values())
+        }
+        return JsonResponse(data, safe=False)
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
+

@@ -5,7 +5,7 @@
 </div>
 
 <section class="container">
-    
+
     <div class="row">
         <div class="col">
             <div class="card shadow m-2 p-5" style="font-size:40px">
@@ -39,69 +39,87 @@
     <div class="container card shadow-lg pt-3">
         <table class="table">
             <thead style="background-color: #e42e0c; color:white">
-              <tr>
-                <th scope="col">RiderName</th>
-                <th scope="col">Food Item</th>
-                <th scope="col">Phone Number</th>
-                <th scope="col">Time</th>
-              </tr>
+                <tr>
+                    <th scope="col">RiderName</th>
+                    <th scope="col">Food Item</th>
+                    <th scope="col">Phone Number</th>
+                    <th scope="col">Time</th>
+                </tr>
             </thead>
             <tbody id="table-body">
-             
+
             </tbody>
-          </table>
-          
-         
+        </table>
+
+
     </div>
-        <div class="col">
-            <div class="card m-2 p-5 shadow" style="height:600px">
-                <h2>Restaurant Location</h2>
-                <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&amp;q=Eiffel+Tower+Paris+France" width="250" height="500" frameborder="0" style="border:0; width: 100%;" allowfullscreen=""></iframe>
-            </div>
+    <div class="col">
+        <div class="card m-2 p-5 shadow" style="height:600px">
+            <h2>Restaurant Location</h2>
+            <iframe
+                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&amp;q=Eiffel+Tower+Paris+France"
+                width="250" height="500" frameborder="0" style="border:0; width: 100%;" allowfullscreen=""></iframe>
         </div>
     </div>
+    </div>
 </section>
- 
+
 {% include 'footer.html' %}
 
 <script>
-    var jsonData; 
+    var jsonData;
     var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
-    ws.onopen = function(event){
-        console.log("Connected...", event); 
-    };
-    ws.onmessage = function(event){
-        jsonData = JSON.parse(event.data); 
-        console.log(jsonData);  
-        if (jsonData.message === "OrderAccepted"){
-            // AJAX to get the credentials 
-            var mydata = {
-                
-            }
-            $.ajax({
-                type:"POST", 
-                url:"", 
-                success:function(data){
-                    console.log(data); 
-                }, 
-                error:function(data){
-                    console.log(data); 
+    $(document).ready(function () {
+        ws.onopen = function (event) {
+            console.log("Connected...", event);
+        };
+        ws.onmessage = function (event) {
+            jsonData = JSON.parse(event.data);
+            console.log(jsonData);
+            if (jsonData.message === "OrderAccepted") {
+                // AJAX to get the credentials 
+                let mydata = {
+                    "customer_name":jsonData.customer_name, 
+                    "time_stamp":jsonData.time_stamp, 
+                    "customer_id":jsonData.customer_id, 
+                    "customer_location":jsonData.customer_location, 
+                    "rider_name":jsonData.rider 
                 }
-            }); 
-            let row = 
-            `
-            <tr>
-            <td>${jsonData.rider}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            </tr>
-            `
-            $("#table-body").append(row); 
+                get_placed_order_data(mydata);
 
-        }
-    };
-    ws.onerror = function(event){
-        console.log("Disconnected...", event);
-    };
+            }
+        };
+        ws.onerror = function (event) {
+            console.log("Disconnected...", event);
+        };
+    });
+
+
+    function get_placed_order_data(mydata) {
+        $.ajax({
+            url: "/partner-with-us/restaurant/populate-dashboard/",
+            type: "POST",
+            data:mydata,
+            success: populate_dashboard_success,
+            error: populate_dashboard_error
+        });
+       
+    }
+    function populate_dashboard_success(data){
+        console.log(data.users_cart);
+        console.log(data.queryset); 
+        // let row =
+        //     `
+        //     <tr>
+        //     <td>${jsonData.rider}</td>
+        //     <td></td>
+        //     <td></td>
+        //     <td></td>
+        //     </tr>
+        //     `
+        // $("#table-body").append(row);
+    }
+    function populate_dashboard_error(data){
+        console.log(data); 
+    }
 </script>

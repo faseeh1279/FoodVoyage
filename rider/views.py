@@ -138,7 +138,6 @@ def upload_consumer_data(request):
     if request.method == "POST":
         rider = request.POST.get("rider")
         customer_id = request.POST.get("customer_id")
-        CUSTOMER_ID = customer_id 
         queryset = customer_models.ConsumerData.objects.filter(customer_id = customer_id)
         for items in queryset: 
             items.rider = rider
@@ -147,6 +146,26 @@ def upload_consumer_data(request):
     else: 
         return JsonResponse({"Message":"Invalid Request"})
 
+
+@csrf_exempt
+def delivered_order_data_saved(request): 
+    if request.method == "POST": 
+        customer_name = request.POST.get("customer_name") 
+        grand_total = request.POST.get("grand_total") 
+        
+        queryset = customer_models.PlaceOrder.objects.filter(order_status = "Pending", customer_name = customer_name)
+        for items in queryset: 
+            items.total_amount = grand_total
+            items.order_status = "delivered"
+            items.save() 
+        queryset = customer_models.Users_Cart.objects.get(username = customer_name)
+        data = customer_models.ConsumerData.objects.filter(message = "OrderPlaced", customer_name = queryset)
+        for items in data: 
+            items.message = "OrderDelivered"
+            items.save() 
+        return JsonResponse({"Message":"Success"})
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
         
 
         
