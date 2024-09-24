@@ -47,7 +47,9 @@ def index(request):
 
 def deliver_order(request): 
     current_rider_name = get_user(request)
+    
     queryset = customer_models.ConsumerData.objects.filter(rider = current_rider_name.username)
+    
     for items in queryset: 
         customer_name = items.customer_name
         customer_location = items.customer_location

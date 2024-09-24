@@ -106,18 +106,26 @@
        
     }
     function populate_dashboard_success(data){
-        console.log(data.users_cart);
-        console.log(data.queryset); 
-        // let row =
-        //     `
-        //     <tr>
-        //     <td>${jsonData.rider}</td>
-        //     <td></td>
-        //     <td></td>
-        //     <td></td>
-        //     </tr>
-        //     `
-        // $("#table-body").append(row);
+        console.log("Users Cart : ",data.users_cart);
+        console.log("Query Set : ",data.queryset); 
+        console.log("Consumer Data : ", data.consumer_data); 
+        console.log("Rider Data : ", data.rider_data);
+        console.log("Queryset experiment : ", data.queryset.users_cart); 
+        // data.users_cart.forEach(items => {
+        //     data.queryset.forEach(newitems=>{
+        //         console.log()
+        //     }); 
+        // });
+        let row =
+            `
+            <tr>
+            <td>${jsonData.rider}</td>
+            <td></td>
+            <td>${data.rider_data[0].phone_number}</td>
+            <td></td>
+            </tr>
+            `
+        $("#table-body").append(row);
     }
     function populate_dashboard_error(data){
         console.log(data); 
