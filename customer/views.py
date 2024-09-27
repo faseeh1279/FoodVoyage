@@ -97,15 +97,26 @@ def cart(request):
     
 
 def place_order(request): 
+   
+
+        # return redirect("home")
+    
+    context = {"url_name": "Placing Order"}
+    return render(request, "customer/place_order.html", context)
+
+@csrf_exempt
+def place_order_form(request): 
     if request.method == "POST": 
         user = get_user(request) 
         users_cart = models.Users_Cart.objects.get(username=user.username)
-        if users_cart.phone_number == "0300*******": 
+        if users_cart.phone_number == "0300*******" or users_cart.phone_number == "": 
             # Update location and phone number
-            customer_phone_number = request.POST.get("phone_number")
+            customer_phone_number = request.POST.get("customer_phoneNumber")
             customer_location = request.POST.get("customer_location")
             users_cart.location = customer_location
             users_cart.phone_number = customer_phone_number
+            print("Customer Phone Number : ", customer_phone_number)
+            print("Customer Location : ", customer_location)
             users_cart.save()
         else: 
             customer_location = request.POST.get("customer_location")
@@ -134,11 +145,11 @@ def place_order(request):
 
         # Clear the cart after placing the order
         models.AddToCart.objects.filter(users_cart=users_cart).delete()
+        return JsonResponse({"Message":"Successfully Done"})
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
 
-        return redirect("home")
-    
-    context = {"url_name": "Placing Order"}
-    return render(request, "customer/place_order.html", context)
+
 
 def place_order_details(request): 
     if request.method == "GET": 
@@ -154,10 +165,12 @@ def place_order_credentials(request):
     if request.method == "GET":
         user = get_user(request)
         users_cart = models.Users_Cart.objects.get(username = user.username)
-        data = list(models.PlaceOrder.objects.filter(users_cart = users_cart).values())
-        return JsonResponse(data, safe=False)
+        data = models.PlaceOrder.objects.filter(users_cart = users_cart)
+        return JsonResponse(list(data.values()), safe=False)
     else: 
         return JsonResponse({"Error":"Invalid Request"})
+
+        
     
 @csrf_exempt
 def placing_order(request): 
@@ -168,7 +181,16 @@ def placing_order(request):
         customer_id = request.POST.get("customer_id")
         customer_location = request.POST.get("customer_location")
         rider = request.POST.get("rider")
+        print("Customer Name : ", customer_name)
+        print("Message : ", message)
+        print("Time stamp : ", time_stamp)
+        print("Customer ID : ", customer_id)
+        print("customer Location : ", customer_location)
+        print("Rider : ", rider)
+        # print("current_cusotmer", current_customer)
         current_customer = models.Users_Cart.objects.get(username = customer_name)
+
+
         models.ConsumerData.objects.create(
             customer_name = current_customer, 
             message = message, 

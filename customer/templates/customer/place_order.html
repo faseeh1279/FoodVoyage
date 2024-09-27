@@ -1,17 +1,17 @@
 {% include 'navbar.html' %}
 
-<form action="" method="POST" class="mx-auto card shadow container m-5 p-5" id="partner-form" enctype="multipart/form-data">
+<form action="javascript:void(0)" method="POST" class="mx-auto card shadow container m-5 p-5" id="partner-form"
+    enctype="multipart/form-data">
     {% csrf_token %}
     <h2 class="form-group container font-weight-bold">Fill the Following Form</h2>
-    <div class="form-group container" id="customer-phoneNumber">
+    <div class="form-group container" id="c-phone">
         <label for="CustomerPhoneNumber">Phone Number</label>
-        <input type="text" name="phone_number" class="form-control" placeholder="Enter Your Phone Number">
+        <input type="text" class="form-control" placeholder="Enter Your Phone Number" id="customer-phoneNumber">
     </div>
-    <div class="form-group container" id="customer-location">
+    <div class="form-group container" id="c-location">
         <label for="CustomerLocation">Customer Location</label>
-        <input type="text" name="customer_location" class="form-control" placeholder="Enter Your Location">
+        <input type="text" class="form-control" placeholder="Enter Your Location" id="customer-location">
     </div>
-    
     <div class="form-group">
         <input type="submit" class="btn btn-primary" value="Submit" id="btn-place-order">
         <input type="reset" class="btn btn-secondary" value="Reset">
@@ -21,78 +21,109 @@
 {% include 'footer.html' %}
 
 <script>
-    var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/"); 
-    var jsonData; 
-    $(document).ready(function(){
-        ws.onopen = function(event){
-        console.log("Connected...", event);
+    var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
+    var jsonData;
+    var mydata;
+    $(document).ready(function () {
+        // Opening the Connection
+        ws.onopen = function (event) {
+            console.log("Connected...", event);
         }
 
-        
+        // Checking whether the data has been uploaded or not!
         $.ajax({
-            url:"/place-order-details/", 
-            type:"GET", 
-            success:function(data){
+            url: "/place-order-details/",
+            type: "GET",
+            async: false,
+            success: function (data) {
+                console.log("Place Order Details :  ", data);
                 data.forEach(items => {
-                    if(items.phone_number === "0300*******"){
-                        $("#customer-phoneNumber").show();
+                    if (items.phone_number === "0300*******") {
+                        $("#c-location").show();
                     }
-                    else{
-                        $("#customer-phoneNumber").hide();
+                    else {
+                        $("#c-phone").hide();
                     }
                 });
-            }, 
-            error:function(data){
+            },
+            error: function (data) {
 
             }
 
         });
-    
-    
-    });
 
-    $("#btn-place-order").click(function(){
-        websocket_connection(); 
-    }); 
-    function websocket_connection(){
+
+
+
+
+        $("#btn-place-order").click(() => {
+            mydata = {
+                "customer_location": $("#customer-location").val(),
+                "customer_phoneNumber": $("#customer-phoneNumber").val()
+            }
+            websocket_connection(mydata);
+
+        });
+
+
+    });
+    function websocket_connection(mydata) {
+        console.log("Data has been Populated...", mydata);
+        $.ajax({
+            url: "/placing-order-form/",
+            type: "POST",
+            data: mydata,
+            async: false,
+            success: function (data) {
+                console.log("Placing Order Form : ", data);
+            },
+            error: function (data) {
+                console.log(data);
+            }
+        });
         // Getting the data from the server 
         $.ajax({
-            url:"/place-order-credentials/", 
-            type:"GET",
-            success:function(data){
-                console.log(data);
-                console.log("JSON DATA IS WORKING PROPERLY"); 
+            url: "/place-order-credentials/",
+            type: "GET",
+            async: false,
+            success: function (data) {
+                console.log("Place Order Credentials : ", data);
+                console.log("JSON DATA IS WORKING PROPERLY");
                 data.forEach(items => {
-                    
+
                     jsonData = {
-                    "customer_name":items.customer_name, 
-                    "message":"OrderPlaced", 
-                    "time_stamp": items.current_datetime, 
-                    "customer_id":items.users_cart_id, 
-                    "customer_location":items.customer_location, 
-                    "rider":"riderName"
+                        "customer_name": items.customer_name,
+                        "message": "OrderPlaced",
+                        "time_stamp": items.current_datetime,
+                        "customer_id": items.users_cart_id,
+                        "customer_location": items.customer_location,
+                        "rider": "riderName"
                     };
                 });
+                console.log(jsonData);
                 $.ajax({
-                    url:"/placing-order/", 
-                    type:"POST", 
-                    data:jsonData,
-                    success:function(data){
-                        
-                    }, 
-                    error:function(data){
-                        console.log(data); 
+                    url: "/placing-order/",
+                    type: "POST",
+                    data: jsonData,
+                    async: false,
+                    success: function (data) {
+                        console.log("PLacing Order : ", data);
+                    },
+                    error: function (data) {
+                        console.log(data);
                     }
 
-                }); 
-                ws.send(JSON.stringify(jsonData)); 
-                ws.onclose = function(event){
-                    console.log("Disconnected", event); 
-                }; 
-            }, 
-            error:function(data){
+                });
+                ws.send(JSON.stringify(jsonData));
+                ws.onclose = function (event) {
+                    console.log("Disconnected", event);
+                };
+            },
+            error: function (data) {
 
             }
-        }); 
-}
+        });
+    }
+
+
 </script>

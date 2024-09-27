@@ -6,7 +6,7 @@ from django.db import models
 class Users_Cart(models.Model): 
     username = models.CharField(max_length=100, default=None)
     email = models.CharField(max_length=50, default="google@example.com")
-    phone_number = models.CharField(max_length=20, default="0300*******")
+    phone_number = models.CharField(max_length=20, default="0300*******", null=True)
     location = models.CharField(max_length=300, default="Location")
     def __str__(self): 
         return self.username 

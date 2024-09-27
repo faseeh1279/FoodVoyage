@@ -51,7 +51,7 @@ def deliver_order(request):
     queryset = customer_models.ConsumerData.objects.filter(rider = current_rider_name.username)
     
     for items in queryset: 
-        customer_name = items.customer_name
+        customer_name = items.customer_name 
         customer_location = items.customer_location
     data = customer_models.Users_Cart.objects.filter(username = customer_name)
     for items in data: 
