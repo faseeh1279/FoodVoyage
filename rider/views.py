@@ -46,28 +46,13 @@ def index(request):
 
 
 def deliver_order(request): 
-    current_rider_name = get_user(request)
+    rider = get_user(request)
     
-    queryset = customer_models.ConsumerData.objects.filter(rider = current_rider_name.username)
-    
-    for items in queryset: 
-        customer_name = items.customer_name 
-        customer_location = items.customer_location
-    data = customer_models.Users_Cart.objects.filter(username = customer_name)
-    for items in data: 
-        customer_phone = items.phone_number
-    restaurant_items = list(customer_models.PlaceOrder.objects.filter(customer_name = customer_name).values())
-    
+
+
     context = {
         "url_name":"DeliverOrder", 
-        "consumer_data":queryset, 
-        "customer_name":customer_name,
-        "customer_location":customer_location, 
-        "customer_phone":customer_phone, 
-        "restaurant_items":restaurant_items 
-
-        
-    }
+        }
     return render(request, "rider/deliver_order.html", context)
 
 @csrf_exempt
@@ -149,26 +134,7 @@ def upload_consumer_data(request):
         return JsonResponse({"Message":"Invalid Request"})
 
 
-@csrf_exempt
-def delivered_order_data_saved(request): 
-    if request.method == "POST": 
-        customer_name = request.POST.get("customer_name") 
-        grand_total = request.POST.get("grand_total") 
-        
-        queryset = customer_models.PlaceOrder.objects.filter(order_status = "Pending", customer_name = customer_name)
-        for items in queryset: 
-            items.total_amount = grand_total
-            items.order_status = "delivered"
-            items.save() 
-        queryset = customer_models.Users_Cart.objects.get(username = customer_name)
-        data = customer_models.ConsumerData.objects.filter(message = "OrderPlaced", customer_name = queryset)
-        for items in data: 
-            items.message = "OrderDelivered"
-            items.save() 
-        return JsonResponse({"Message":"Success"})
-    else: 
-        return JsonResponse({"Error":"Invalid Request"})
-        
+
 
         
 
