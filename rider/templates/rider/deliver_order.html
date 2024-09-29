@@ -1,8 +1,8 @@
 {% include 'navbar.html' %}
 
 <section class="container">
-{{restaurant_items|json_script:"restaurant-items"}}
 
+{{queryset|json_script:"queryset"}}
     <div class="card shadow-lg">
         <div class="container">
             <div class="row">
@@ -98,7 +98,8 @@
 
 <script>
   $(document).ready(function(){
-    console.log("Everything working properly"); 
+    queryset = $("#queryset").html(); 
+    console.log(JSON.parse(queryset)); 
   }); 
     
 </script>

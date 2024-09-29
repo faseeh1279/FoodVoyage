@@ -48,10 +48,23 @@ def index(request):
 def deliver_order(request): 
     rider = get_user(request)
     
+    queryset = customer_models.ConsumerData.objects.get(rider = rider.username, message = "OrderAccepted")
 
+    matching_orders = customer_models.PlaceOrder.objects.filter(users_cart = queryset.customer_name)
+
+    restaurant_locations = restaurant_models.Register_Partner.objects.all() 
+
+    matching_orders = list(matching_orders.values())
+
+    for items in matching_orders: 
+        for i in restaurant_locations: 
+            if items['restaurant_name'] == i.restaurant_name: 
+                items['restaurant_location'] = i.restaurant_location 
+                break 
 
     context = {
         "url_name":"DeliverOrder", 
+        "queryset": matching_orders
         }
     return render(request, "rider/deliver_order.html", context)
 
@@ -128,6 +141,7 @@ def upload_consumer_data(request):
         queryset = customer_models.ConsumerData.objects.filter(customer_id = customer_id)
         for items in queryset: 
             items.rider = rider
+            items.message = "OrderAccepted"
             items.save() 
         return JsonResponse({"Message":"Data Saved Successfully"})
     else: 
