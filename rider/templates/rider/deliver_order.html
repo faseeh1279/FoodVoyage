@@ -2,15 +2,22 @@
 
 <section class="container">
 
-{{queryset|json_script:"queryset"}}
+    {{queryset|json_script:"queryset"}}
+    {{customer_phone|json_script:"customer_phone"}}
     <div class="card shadow-lg">
         <div class="container">
+
+            {% for items in queryset %}
+            {% if forloop.first %}
+
+
+
             <div class="row">
                 <div class="col-sm p-5 text-center text-white font-weight-bold" style="background-color:#e42e0c;">
                     <h1 class="text-white font-weight-bold">Customer Name</h1>
                 </div>
                 <div class="col-sm p-5 text-center">
-                    <h1 class="" id="customer-name">Muhammad Faseeh</h1>
+                    <h1 class="" id="customer-name">{{items.customer_name}}</h1>
                 </div>
             </div>
             <div class="row">
@@ -18,7 +25,7 @@
                     <h2 class="font-weight-bold">Customer Address</h2>
                 </div>
                 <div class="col-sm p-5 text-center text-white font-weight-bold" style="background-color:#e42e0c;">
-                    <h2 class="text-white" id="customer-location">Mohallah Raitan Wala Street # 1 Model Town, Gujranwala.</h2>
+                    <h2 class="text-white" id="customer-location">{{items.customer_location}}</h2>
                 </div>
             </div>
             <div class="row">
@@ -26,31 +33,34 @@
                     <h2 class="font-weight-bold text-center text-white">Customer Phone</h2>
                 </div>
                 <div class="col-sm p-5 text-center text-white font-weight-bold">
-                    <h2 id="customer-phone">03008748760</h2>
+                    <h2 id="customer-phone">{{customer_phone}}</h2>
                 </div>
             </div>
+            
 
-            <hr style="border: 4px solid #e42e0c; " class="mt-4">
-            <div class="row">
-                <div class="col-sm" style="background-color: #e42e0c; color:white">
-                    <h3 class="text-center text-white font-weight-bold">Restaurant Name</h2>
-                </div>
-                <div class="col-sm">
-                    <h3 class="text-center" id="restaurant-name">Rehans Kitchen</h2>
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col-sm" style="background-color: #e42e0c; color:white">
-                    <h3 class="text-center text-white font-weight-bold">Restaurant Location</h2>
-                </div>
-                <div class="col-sm">
-                    <h3 class="text-center" id="restaurant-location">Model Town Gujranwala</h2>
-                </div>
-            </div>
+
+
+
             <!-- Order Details -->
             <section class="container">
                 <div id="restaurant-credentials">
-                    
+                    <!-- <hr style="border: 4px solid #e42e0c; " class="mt-4">
+                    <div class="row">
+                        <div class="col-sm" style="background-color: #e42e0c; color:white">
+                            <h3 class="text-center text-white font-weight-bold">Restaurant Name</h2>
+                        </div>
+                        <div class="col-sm">
+                            <h3 class="text-center" id="restaurant-name">Rehans Kitchen</h2>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm" style="background-color: #e42e0c; color:white">
+                            <h3 class="text-center text-white font-weight-bold">Restaurant Location</h2>
+                        </div>
+                        <div class="col-sm">
+                            <h3 class="text-center" id="restaurant-location">Model Town Gujranwala</h2>
+                        </div>
+                    </div> -->
                 </div>
 
                 <table class="table mt-2">
@@ -62,33 +72,39 @@
                         </tr>
                     </thead>
                     <tbody id="table-body">
-                        <tr>
+                        <!-- <tr>
                             <td class="">1</td>
                             <td class="">Grill Burger</td>
                             <td class="text-center">550</td>
-                            </tr>
+                        </tr> -->
+                        
+                    </tbody>
+                    <tbody class="ending">
                         <tr>
                             <td colspan="2" style="background-color: #e42e0c;">
                                 <h3 class="text-center font-weight-bold text-white">
                                     TOTAL
                                 </h3>
                             </td>
-                
+
                             <td class="text-center font-weight-bold">
                                 <h3 class="text-center font-weight-bold">
-                                    ${grand_total}
+                                    {{items.total_amount}}
                                 </h3>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </section>
+            {% endif %}
+            {% endfor %}
 
 
         </div>
-        
-            <button class="btn btn-primary m-5" id="order-delivered" style="background-color:#e42e0c;"><a href="{% url 'rider-dashboard' %}" style=" color:white;">CONFIRMED</a></button>
-        
+<!-- {% url 'rider-dashboard' %} -->
+        <button class="btn btn-primary m-5"  style="background-color:#e42e0c;"><a
+                href="#" id="order-delivered" style=" color:white;">CONFIRMED</a></button>
+
     </div>
 
 </section>
@@ -97,9 +113,98 @@
 
 
 <script>
-  $(document).ready(function(){
-    queryset = $("#queryset").html(); 
-    console.log(JSON.parse(queryset)); 
-  }); 
-    
+    var table_body = $("#table-body");
+    var restaurant_credentials = $("#restaurant-credentials");
+    var res_cred; 
+    var row; 
+    var total_items; 
+    var grand_total = 0; 
+    var counter = 1; 
+    var data = [];
+    var json = {};
+    $(document).ready(function () {
+        queryset = $("#queryset").html();
+        customer_phone = $("#customer_phone").html();
+        queryset = JSON.parse(queryset);
+        let res_names = []; // Make sure to initialize the array
+
+        queryset.forEach((items, index) => {
+            if (!res_names.includes(items.restaurant_name)) {
+                res_names.push(items.restaurant_name);
+            }
+        });
+        console.log("Restaurant Names : ", res_names);
+        res_names.forEach((items, index) => {
+            
+            queryset.forEach((i) => {
+                if (items == i.restaurant_name) {
+                    json = {
+                        restaurant_name: i.restaurant_name,
+                        restaurant_location: i.restaurant_location,
+                        item_name: i.item_name,
+                        item_price: i.item_price,
+                        customer_name: i.customer_name, 
+                        total_amount: i.total_amount, 
+                        customer_location: i.customer_location, 
+                        
+
+                    };
+                    data.push(json);
+                    row =
+                        `
+                    <tr>
+                        <td class="">${counter}</td>
+                        <td class="">${i.item_name}</td>
+                        <td class="text-center">${i.item_price}</td>
+                    </tr>
+
+                    `
+                    counter++; 
+                    table_body.append(row);
+                    res_cred =
+                        `
+                    <hr style="border: 4px solid #e42e0c;" class="mt-4">
+                    <div class="row">
+                        <div class="col-sm" style="background-color: #e42e0c; color:white">
+                            <h3 class="text-center text-white font-weight-bold">Restaurant Name</h2>
+                        </div>
+                        <div class="col-sm">
+                            <h3 class="text-center" id="restaurant-name">${i.restaurant_name}</h2>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm" style="background-color: #e42e0c; color:white">
+                            <h3 class="text-center text-white font-weight-bold">Restaurant Location</h2>
+                        </div>
+                        <div class="col-sm">
+                            <h3 class="text-center" id="restaurant-location">${i.restaurant_location}</h2>
+                        </div>
+                    </div>
+                 `
+                }
+            });
+
+            restaurant_credentials.append(res_cred);
+            console.log("Customer Phone Number : ", customer_phone);
+        });
+        $("#order-delivered").click(function(){
+           
+            $.ajax({
+                url:"/partner-with-us/rider/successfully-delivered-order/", 
+                type:"POST", 
+                data: json, 
+                async: false, 
+                success: function(data){
+                    console.log("Successfully Delivered Order!",data); 
+                }, 
+                error:function(data){
+                    console.log(data); 
+
+                }
+                
+            }); 
+        }); 
+
+    });
+
 </script>

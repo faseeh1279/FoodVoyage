@@ -92,7 +92,7 @@ def cart(request):
         data = list(models.AddToCart.objects.filter(users_cart=users_cart).values())
         return JsonResponse(data, safe=False)            
     else: 
-        print("Problem # 7") 
+         
         return JsonResponse({"Error":"Invalid Request"})
     
 
@@ -115,8 +115,7 @@ def place_order_form(request):
             customer_location = request.POST.get("customer_location")
             users_cart.location = customer_location
             users_cart.phone_number = customer_phone_number
-            print("Customer Phone Number : ", customer_phone_number)
-            print("Customer Location : ", customer_location)
+            
             users_cart.save()
         else: 
             customer_location = request.POST.get("customer_location")
@@ -142,7 +141,7 @@ def place_order_form(request):
                 customer_location=customer_location,
                 current_datetime=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             )
-
+        
         # Clear the cart after placing the order
         models.AddToCart.objects.filter(users_cart=users_cart).delete()
         return JsonResponse({"Message":"Successfully Done"})
@@ -181,13 +180,8 @@ def placing_order(request):
         customer_id = request.POST.get("customer_id")
         customer_location = request.POST.get("customer_location")
         rider = request.POST.get("rider")
-        print("Customer Name : ", customer_name)
-        print("Message : ", message)
-        print("Time stamp : ", time_stamp)
-        print("Customer ID : ", customer_id)
-        print("customer Location : ", customer_location)
-        print("Rider : ", rider)
-        # print("current_cusotmer", current_customer)
+        
+        
         current_customer = models.Users_Cart.objects.get(username = customer_name)
 
 

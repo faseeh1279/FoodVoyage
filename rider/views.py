@@ -50,9 +50,12 @@ def deliver_order(request):
     
     queryset = customer_models.ConsumerData.objects.get(rider = rider.username, message = "OrderAccepted")
 
-    matching_orders = customer_models.PlaceOrder.objects.filter(users_cart = queryset.customer_name)
+    matching_orders = customer_models.PlaceOrder.objects.filter(users_cart = queryset.customer_name, order_status = "Pending", customer_location = queryset.customer_location)
 
     restaurant_locations = restaurant_models.Register_Partner.objects.all() 
+
+    customer_phone = customer_models.Users_Cart.objects.get(username = queryset.customer_name)
+    customer_phone = customer_phone.phone_number 
 
     matching_orders = list(matching_orders.values())
 
@@ -61,10 +64,12 @@ def deliver_order(request):
             if items['restaurant_name'] == i.restaurant_name: 
                 items['restaurant_location'] = i.restaurant_location 
                 break 
-
+ 
     context = {
         "url_name":"DeliverOrder", 
-        "queryset": matching_orders
+        "queryset": matching_orders, 
+        "customer_phone":customer_phone, 
+        
         }
     return render(request, "rider/deliver_order.html", context)
 
@@ -138,6 +143,7 @@ def upload_consumer_data(request):
     if request.method == "POST":
         rider = request.POST.get("rider")
         customer_id = request.POST.get("customer_id")
+        print("CUSTOMER ID : ", customer_id)
         queryset = customer_models.ConsumerData.objects.filter(customer_id = customer_id)
         for items in queryset: 
             items.rider = rider
@@ -147,6 +153,30 @@ def upload_consumer_data(request):
     else: 
         return JsonResponse({"Message":"Invalid Request"})
 
+
+
+@csrf_exempt
+def successfully_delivered_order(request): 
+    if request.method == "POST": 
+        customer_name = request.POST.get("customer_name")
+        customer_location = request.POST.get("customer_location")
+        print("Customer Location : ", customer_location)
+        print("Customer Name : ", customer_name)
+        queryset = customer_models.PlaceOrder.objects.filter(customer_name = customer_name, order_status = "Pending", customer_location = customer_location)
+        
+        for items in queryset: 
+            items.order_status = "Delivered"
+            items.save() 
+        
+        data = customer_models.ConsumerData.objects.filter(customer_name__username = customer_name, customer_location = customer_location)
+
+        for items in data:
+            items.message = "OrderDelivered"
+            items.save() 
+            
+        return JsonResponse({"Message":"Successfully"})
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
 
 
 

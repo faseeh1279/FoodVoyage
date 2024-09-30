@@ -10,4 +10,4 @@ urlpatterns = [
     path("get-orders-from-database/", views.get_orders, name="get-orders-from-database"), 
     path("get-rider-name/", views.get_rider_name, name="get-rider-name"), 
     path("upload-consumer-data/", views.upload_consumer_data, name="upload_consumer_data"),
-    ]
+    path("successfully-delivered-order/", views.successfully_delivered_order, name="successfully-delivered-order"),     ]

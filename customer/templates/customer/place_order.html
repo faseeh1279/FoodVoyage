@@ -13,7 +13,10 @@
         <input type="text" class="form-control" placeholder="Enter Your Location" id="customer-location">
     </div>
     <div class="form-group">
-        <input type="submit" class="btn btn-primary" value="Submit" id="btn-place-order">
+        <a href="{% url 'home' %}" class="btn btn-primary" style="color:white;" value="Submit" id="btn-place-order">
+        <!-- <input type="submit" class="btn btn-primary" style="color:white;" value="Submit" id="btn-place-order"> -->
+        Submit
+    </a>
         <input type="reset" class="btn btn-secondary" value="Reset">
     </div>
 </form>
@@ -24,7 +27,7 @@
     var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
     var jsonData;
     var mydata;
-    $(document).ready(function () {
+    
         // Opening the Connection
         ws.onopen = function (event) {
             console.log("Connected...", event);
@@ -65,10 +68,10 @@
 
         });
 
-
-    });
     function websocket_connection(mydata) {
         console.log("Data has been Populated...", mydata);
+        
+        
         $.ajax({
             url: "/placing-order-form/",
             type: "POST",
@@ -81,7 +84,7 @@
                 console.log(data);
             }
         });
-        // Getting the data from the server 
+        //Making Django Channels Request
         $.ajax({
             url: "/place-order-credentials/",
             type: "GET",
