@@ -7,8 +7,6 @@ import customer.models as customer_models
 import restaurant.models as restaurant_models 
 import json 
 
-
-
 # Index Views 
 @login_required
 def get_user(request): 
@@ -166,14 +164,27 @@ def successfully_delivered_order(request):
         
         for items in queryset: 
             items.order_status = "Delivered"
-            items.save() 
+            items.save()
+
+        for items in queryset: 
+            data = customer_models.OrderHistory.objects.create(
+                customer_name = items.customer_name,
+                customer_location = items.customer_location, 
+                item_name = items.item_name, 
+                item_price = items.item_price, 
+                total_price = items.total_amount, 
+                timestamp = items.current_datetime                
+            )
+            data.save() 
         
         data = customer_models.ConsumerData.objects.filter(customer_name__username = customer_name, customer_location = customer_location)
-
         for items in data:
             items.message = "OrderDelivered"
             items.save() 
-            
+        # Deleting the items in the queryset
+        data.delete() 
+        queryset = customer_models.PlaceOrder.objects.filter(customer_name = customer_name, order_status = "Delivered", customer_location = customer_location)
+        queryset.delete()      
         return JsonResponse({"Message":"Successfully"})
     else: 
         return JsonResponse({"Error":"Invalid Request"})

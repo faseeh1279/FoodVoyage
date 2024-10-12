@@ -94,15 +94,39 @@ def populate_dashboard(request):
         customer_id = request.POST.get("customer_id")
         customer_location = request.POST.get("customer_location")
         rider_name = request.POST.get("rider_name")
-        
-        queryset = customer_models.PlaceOrder.objects.filter(customer_name = customer_name, users_cart = customer_id)
+        print("Customer Name : ", customer_name)
+        print("Time Stamp : ", time_stamp)
+        print("Customer ID : ", customer_id)
+        print("Customer Location : ", customer_location)
+        print("Rider Name : ", rider_name)
+        queryset = customer_models.PlaceOrder.objects.filter(customer_name = customer_name, users_cart = customer_id, customer_location = customer_location)
 
         for items in queryset: 
             users_cart = customer_models.Users_Cart.objects.filter(username = items.users_cart)
 
         rider_data = rider_models.Rider.objects.filter(name = rider_name)
-        consumer_data = customer_models.ConsumerData.objects.filter(rider = rider_name, customer_name__username = customer_name, message = "OrderPlaced")
-        queryset = customer_models.ConsumerData.objects.filter()
+        consumer_data = customer_models.ConsumerData.objects.filter(rider = rider_name, customer_name__username = customer_name, message = "OrderAccepted")
+        
+        # updating the data in the Orders History
+        user = request.user 
+        restaurant_email = user.email 
+        restaurant_data = models.Register_Partner.objects.get(email = restaurant_email)
+        if models.OrderHistory.objects.filter(restaurant__email = restaurant_email).exists(): 
+            total_orders_completed = models.OrderHistory.objects.get(restaurant__email = restaurant_email); 
+            total_orders_competed = int(total_orders_completed.order_completed)
+            total_orders_completed += 1 
+            models.OrderHistory.objects.create(
+                customer_name = customer_name, 
+                order_completed = total_orders_completed,  
+                
+            )
+            
+            order_history = customer_models.OrderHistory.objects.create(
+            customer_name = customer_name, 
+            rider = rider_name, 
+            
+        )
+        # Updating th eorderrs in the order history category. 
         data = {
             "queryset":list(queryset.values()), 
             "users_cart":list(users_cart.values()),
@@ -112,4 +136,5 @@ def populate_dashboard(request):
         return JsonResponse(data, safe=False)
     else: 
         return JsonResponse({"Error":"Invalid Request"})
+
 

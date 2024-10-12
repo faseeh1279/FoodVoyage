@@ -48,4 +48,17 @@ class ConsumerData(models.Model):
         return f"{self.customer_name} {self.message} at {self.customer_location} by {self.rider}"
 
 
+class OrderHistory(models.Model): 
+    customer_name = models.CharField(max_length=255)
+    customer_location = models.CharField(max_length=255) 
+    item_name = models.CharField(max_length=255)
+    item_price = models.CharField(max_length=255)
+    total_price = models.CharField(max_length=255)
+    timestamp = models.CharField(max_length=155)
+    def __str__(self): 
+        return f"Customer - {self.customer_name} at location: {self.customer_location} on {self.timestamp}"
+
+
+
+
     

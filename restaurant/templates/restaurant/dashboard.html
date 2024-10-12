@@ -39,14 +39,21 @@
     <div class="container card shadow-lg pt-3">
         <table class="table">
             <thead style="background-color: #e42e0c; color:white">
+                <tr id="rider-data-name">
+                    <!-- Add Rider Data here -->
+                </tr>
+                <tr id="rider-data-phone">
+                    <!-- Add Rider Data Phone here  -->
+                </tr>
                 <tr>
-                    <th scope="col">RiderName</th>
-                    <th scope="col">Food Item</th>
-                    <th scope="col">Phone Number</th>
-                    <th scope="col">Time</th>
+                    <th scope="col" class="text-center">No</th>
+                    <th scope="col" class="text-center">Item Name</th>
+                    <th scope="col" class="text-center">Item Price</th>
+
                 </tr>
             </thead>
             <tbody id="table-body">
+                <!-- Add Customer Orders Items Here -->
 
             </tbody>
         </table>
@@ -67,8 +74,12 @@
 {% include 'footer.html' %}
 
 <script>
+    var place_order_details;
+    var consumer_data_details;
+    var rider_data_details;
     var jsonData;
     var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
+
     $(document).ready(function () {
         ws.onopen = function (event) {
             console.log("Connected...", event);
@@ -79,11 +90,11 @@
             if (jsonData.message === "OrderAccepted") {
                 // AJAX to get the credentials 
                 let mydata = {
-                    "customer_name":jsonData.customer_name, 
-                    "time_stamp":jsonData.time_stamp, 
-                    "customer_id":jsonData.customer_id, 
-                    "customer_location":jsonData.customer_location, 
-                    "rider_name":jsonData.rider 
+                    "customer_name": jsonData.customer_name,
+                    "time_stamp": jsonData.time_stamp,
+                    "customer_id": jsonData.customer_id,
+                    "customer_location": jsonData.customer_location,
+                    "rider_name": jsonData.rider
                 }
                 get_placed_order_data(mydata);
 
@@ -99,35 +110,64 @@
         $.ajax({
             url: "/partner-with-us/restaurant/populate-dashboard/",
             type: "POST",
-            data:mydata,
+            data: mydata,
             success: populate_dashboard_success,
             error: populate_dashboard_error
         });
-       
+
     }
-    function populate_dashboard_success(data){
-        console.log("Users Cart : ",data.users_cart);
-        console.log("Query Set : ",data.queryset); 
-        console.log("Consumer Data : ", data.consumer_data); 
+    function populate_dashboard_success(data) {
+        console.log("Users Cart : ", data.users_cart);
+        console.log("Query Set : ", data.queryset);
+        console.log("Consumer Data : ", data.consumer_data);
         console.log("Rider Data : ", data.rider_data);
-        console.log("Queryset experiment : ", data.queryset.users_cart); 
-        // data.users_cart.forEach(items => {
-        //     data.queryset.forEach(newitems=>{
-        //         console.log()
-        //     }); 
-        // });
-        let row =
+
+        place_order_details = data.queryset;
+        consumer_data_details = data.consumer_data;
+        rider_data_details = data.rider_data;
+
+
+        let rider_data_name =
+            `
+        <th scope="col"  class="text-center">Rider Name</th>
+        <td scope="col" colspan="2" class="text-center" style="background-color: white; color:black;">${rider_data_details[0].name}</td>  
+        `
+        let riderdataname = $("#rider-data-name");
+        riderdataname.append(rider_data_name);
+
+        let rider_data_phone =
+            `
+        <th scope="col" class="text-center">Rider Phone</th>
+        <td scope="col" colspan="2" class="text-center" style="background-color: white; color:black;">
+        ${rider_data_details[0].phone_number}</td>
+        `
+
+
+        let riderdataphone = $("#rider-data-phone");
+        riderdataphone.append(rider_data_phone)
+
+        place_order_details.forEach((items, index) => {
+            let row =
             `
             <tr>
-            <td>${jsonData.rider}</td>
-            <td></td>
-            <td>${data.rider_data[0].phone_number}</td>
-            <td></td>
+                <td scope="col" class="text-center">${index + 1}</td>
+                <td scope="col" class="text-center">${items.item_name}</td>
+                <td scope="col" class="text-center">${items.item_price}</td>
+            </tr>
+            `
+            $("#table-body").append(row);
+            
+        });
+        let row =
+        `
+        <tr>
+            <th scope="col" class="text-center" colspan=2>Total Amount</th>
+            <th scope="col" class="text-center">${place_order_details[0].total_amount}</th>
             </tr>
             `
         $("#table-body").append(row);
     }
-    function populate_dashboard_error(data){
-        console.log(data); 
+    function populate_dashboard_error(data) {
+        console.log(data);
     }
 </script>

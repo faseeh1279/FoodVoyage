@@ -26,3 +26,14 @@ class AddFood(models.Model):
 
     def __str__(self):
         return self.item_name
+    
+
+class OrderHistory(models.Model): 
+    restaurant = models.ForeignKey(Register_Partner, on_delete=models.CASCADE)
+    rider = models.CharField(max_length=50)
+    customer_name = models.CharField(max_length=50)
+    order_completed = models.CharField(max_length=50)
+    wallet = models.CharField(max_length=255)
+
+    def __str__(self): 
+        return f'Restaurant {self.restaurant}'
