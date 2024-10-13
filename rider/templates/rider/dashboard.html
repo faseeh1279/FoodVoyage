@@ -8,7 +8,7 @@
 <section class="container" id="rider-dashboard">
     <div class="row">
         <div class="col">
-            <div class="card shadow m-2 p-5 text-center" style="font-size:40px">
+            <div class="card shadow m-2 p-5 text-center" style="font-size:40px" id="orders-completed">
                 67
                 <div style="font-size:20px">
                     Orders Completed
@@ -17,7 +17,7 @@
         </div>
 
         <div class="col">
-            <div class="card shadow m-2 p-5 text-center" style="font-size:40px">
+            <div class="card shadow m-2 p-5 text-center" style="font-size:40px" id="wallet">
                 1500000 Rs.
                 <div style="font-size:20px">
                     Wallet
@@ -72,7 +72,7 @@
     var ws = new WebSocket("ws://127.0.0.1:8000/ws/sc/place_order/");
     var data;
     $(document).ready(function () {
-
+        populate_walletAndOrders(); 
         ws.onopen = function (event) {
             console.log("Connected...", event);
         }
@@ -264,6 +264,25 @@
             error: getting_customer_phoneNumberFailed,
         });
     }
+
+    function populate_walletAndOrders(){
+        order_completed = $("#orders-completed"); 
+        wallet = $("#wallet"); 
+        $.ajax({
+            url: "/partner-with-us/rider/get-wallet-data/",
+            type: "GET", 
+            async: false, 
+            success: function(data) {
+                wallet.html("Rs. " + data.wallet + "<br><span style='font-size:smaller'>Wallet</span>"); 
+                order_completed.html(data.order_completed + "<br><span style='font-size:smaller'>Orders Completed</span>");
+            }, 
+            error: function(event) {
+            }, 
+        }); 
+    }
+
+
+
 </script>
 
 

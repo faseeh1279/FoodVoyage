@@ -4,3 +4,4 @@ from . import models
 
 admin.site.register(models.OrderDetails)
 admin.site.register(models.Rider)
+

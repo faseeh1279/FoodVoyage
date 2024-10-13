@@ -184,12 +184,52 @@ def successfully_delivered_order(request):
         # Deleting the items in the queryset
         data.delete() 
         queryset = customer_models.PlaceOrder.objects.filter(customer_name = customer_name, order_status = "Delivered", customer_location = customer_location)
-        queryset.delete()      
+        
+        queryset.delete()  
+
+        # Updating the Data in the Riders OrdersDetails Model 
+        user = request.user 
+        rider_name =  user.username 
+        if models.OrderDetails.objects.filter(rider__name= rider_name).exists(): 
+            total_orders = models.OrderDetails.objects.filter(rider__name = rider_name).order_by("-order_completed").first()  
+            order_completed = total_orders.order_completed 
+            wallet = total_orders.wallet 
+            # Incrementing the wallet and order_completed
+            order_completed = order_completed + 1 
+            wallet = wallet + 600 
+            rider_details = models.Rider.objects.get(name = rider_name) 
+            models.OrderDetails.objects.create(rider = rider_details, customer_name = customer_name, customer_location = customer_location, wallet = wallet, order_completed = order_completed)
+            
+        else:
+            print("Rider Name : ", rider_name)
+            rider_details = models.Rider.objects.get(name = rider_name) 
+            models.OrderDetails.objects.create(
+                rider = rider_details, 
+                customer_name = customer_name, 
+                customer_location = customer_location, 
+                order_completed = 1, 
+                wallet = 600
+            )
+
+
         return JsonResponse({"Message":"Successfully"})
     else: 
         return JsonResponse({"Error":"Invalid Request"})
 
 
+def get_wallet_data(request): 
+    if request.method == "GET": 
+        user = request.user 
+        rider_name = user.username 
+        if models.OrderDetails.objects.filter(rider__name = rider_name).exists(): 
+            total_orders = models.OrderDetails.objects.filter(rider__name = rider_name).order_by("-order_completed").first() 
+            wallet = total_orders.wallet
+            order_completed = total_orders.order_completed
+            return JsonResponse({"wallet":wallet, "order_completed":order_completed})
+        else: 
+            return JsonResponse({"wallet":0, "order_completed":0})
+    else: 
+        return JsonResponse({"Error":"Invalid Request"})
 
         
 

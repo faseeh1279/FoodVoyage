@@ -15,12 +15,18 @@ class Rider(models.Model):
     def __str__(self): 
         return self.name  
 
+
+    
+
 class OrderDetails(models.Model): 
-    rider = models.ForeignKey(Rider, on_delete=models.CASCADE, related_name='pending_orders')
-    customer_id = models.CharField(max_length=100)
+    rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
     customer_name = models.CharField(max_length=100)
-    order_status = models.BooleanField(default=False) # False means that order is pending and True means that order has been delivered. 
-    rider_name = models.CharField(max_length=100, default="rider_name")
+    customer_location = models.CharField(max_length=255, default=None)
+    wallet = models.IntegerField(default=0)
+    order_completed = models.IntegerField(default = 0)
+    def __str__(self): 
+        return f'Rider : {self.rider} Wallet: {self.wallet} Orders Completed{self.order_completed}'
+    
     
 
 

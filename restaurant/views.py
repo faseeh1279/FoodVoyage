@@ -107,25 +107,8 @@ def populate_dashboard(request):
         rider_data = rider_models.Rider.objects.filter(name = rider_name)
         consumer_data = customer_models.ConsumerData.objects.filter(rider = rider_name, customer_name__username = customer_name, message = "OrderAccepted")
         
-        # updating the data in the Orders History
-        user = request.user 
-        restaurant_email = user.email 
-        restaurant_data = models.Register_Partner.objects.get(email = restaurant_email)
-        if models.OrderHistory.objects.filter(restaurant__email = restaurant_email).exists(): 
-            total_orders_completed = models.OrderHistory.objects.get(restaurant__email = restaurant_email); 
-            total_orders_competed = int(total_orders_completed.order_completed)
-            total_orders_completed += 1 
-            models.OrderHistory.objects.create(
-                customer_name = customer_name, 
-                order_completed = total_orders_completed,  
-                
-            )
+        
             
-            order_history = customer_models.OrderHistory.objects.create(
-            customer_name = customer_name, 
-            rider = rider_name, 
-            
-        )
         # Updating th eorderrs in the order history category. 
         data = {
             "queryset":list(queryset.values()), 
